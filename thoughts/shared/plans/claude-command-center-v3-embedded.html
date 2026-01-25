@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Command Center v3 - Embedded CLI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --bg-primary: #0d1117;
+      --bg-secondary: #161b22;
+      --bg-tertiary: #21262d;
+      --border: #30363d;
+      --text-primary: #e6edf3;
+      --text-secondary: #8b949e;
+      --accent: #58a6ff;
+      --success: #3fb950;
+      --warning: #d29922;
+      --error: #f85149;
+    }
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .terminal-output {
+      font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .status-active {
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .sidebar-item:hover {
+      background: var(--bg-tertiary);
+    }
+    .sidebar-item.active {
+      background: var(--bg-tertiary);
+      border-left: 2px solid var(--accent);
+    }
+    .thinking-block {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    }
+  </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden">
+
+  <!-- Top Bar -->
+  <header class="h-10 flex items-center justify-between px-4 border-b border-[#30363d] bg-[#161b22] flex-shrink-0">
+    <div class="flex items-center gap-3">
+      <div class="w-6 h-6 rounded bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
+        <span class="text-white text-xs font-bold">C</span>
+      </div>
+      <span class="text-sm font-medium">Claude Command Center</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <button class="px-2 py-1 text-xs text-[#8b949e] hover:text-white">⌘K Quick Actions</button>
+      <button class="px-3 py-1 rounded bg-[#238636] text-white text-xs">+ New Session</button>
+    </div>
+  </header>
+
+  <div class="flex-1 flex overflow-hidden">
+    <!-- Left Sidebar: Navigation -->
+    <aside class="w-56 border-r border-[#30363d] bg-[#161b22] flex flex-col flex-shrink-0">
+      <!-- Section: Active Sessions -->
+      <div class="p-3 border-b border-[#30363d]">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-medium text-[#8b949e] uppercase tracking-wide">Sessions</span>
+          <span class="text-xs text-[#8b949e]">5</span>
+        </div>
+        <div class="space-y-0.5">
+          <div class="sidebar-item active flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer">
+            <span class="w-2 h-2 rounded-full bg-[#3fb950] status-active"></span>
+            <span class="text-sm truncate flex-1">ETL Pipeline</span>
+            <span class="text-xs text-[#8b949e]">ea:%0</span>
+          </div>
+          <div class="sidebar-item flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer">
+            <span class="w-2 h-2 rounded-full bg-[#3fb950] status-active"></span>
+            <span class="text-sm truncate flex-1">Command Center</span>
+            <span class="text-xs text-[#8b949e]">ea:%1</span>
+          </div>
+          <div class="sidebar-item flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer">
+            <span class="w-2 h-2 rounded-full bg-[#f85149]"></span>
+            <span class="text-sm truncate flex-1">Voice Agent</span>
+            <span class="text-xs text-[#8b949e]">ea:%2</span>
+          </div>
+          <div class="sidebar-item flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer opacity-60">
+            <span class="w-2 h-2 rounded-full bg-[#d29922]"></span>
+            <span class="text-sm truncate flex-1">Slack (idle)</span>
+            <span class="text-xs text-[#8b949e]">ea:%3</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Ledgers -->
+      <div class="p-3 border-b border-[#30363d] flex-1 overflow-y-auto">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-medium text-[#8b949e] uppercase tracking-wide">Ledgers</span>
+          <button class="text-xs text-[#58a6ff]">+</button>
+        </div>
+        <div class="space-y-0.5">
+          <div class="sidebar-item flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer">
+            <span class="text-[#8b949e]">📄</span>
+            <span class="text-sm truncate">etl-pipeline</span>
+          </div>
+          <div class="sidebar-item flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer">
+            <span class="text-[#8b949e]">📄</span>
+            <span class="text-sm truncate">voice-agent</span>
+          </div>
+          <div class="sidebar-item flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer">
+            <span class="text-[#8b949e]">📄</span>
+            <span class="text-sm truncate">claude-session-manager</span>
+          </div>
+          <div class="sidebar-item flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer">
+            <span class="text-[#8b949e]">📄</span>
+            <span class="text-sm truncate">business-os</span>
+          </div>
+          <div class="sidebar-item flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer">
+            <span class="text-[#8b949e]">📄</span>
+            <span class="text-sm truncate">notification-system</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Quick Access -->
+      <div class="p-3">
+        <div class="text-xs font-medium text-[#8b949e] uppercase tracking-wide mb-2">Quick Access</div>
+        <div class="space-y-0.5">
+          <div class="sidebar-item flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer">
+            <span class="text-[#8b949e]">📁</span>
+            <span class="text-sm">Plans</span>
+          </div>
+          <div class="sidebar-item flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer">
+            <span class="text-[#8b949e]">📁</span>
+            <span class="text-sm">Handoffs</span>
+          </div>
+          <div class="sidebar-item flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer">
+            <span class="text-[#8b949e]">⚙️</span>
+            <span class="text-sm">Settings</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content: Session View -->
+    <main class="flex-1 flex flex-col overflow-hidden bg-[#0d1117]">
+      <!-- Session Header -->
+      <div class="h-12 flex items-center justify-between px-4 border-b border-[#30363d] bg-[#161b22] flex-shrink-0">
+        <div class="flex items-center gap-3">
+          <span class="w-3 h-3 rounded-full bg-[#3fb950] status-active"></span>
+          <div>
+            <span class="font-medium">ETL Pipeline Gold Stage</span>
+            <span class="text-xs text-[#8b949e] ml-2">ea:%0 • executive-assistant</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="px-2 py-1 rounded text-xs text-[#8b949e] hover:bg-[#21262d]">
+            📋 Copy Session
+          </button>
+          <button class="px-2 py-1 rounded text-xs text-[#8b949e] hover:bg-[#21262d]">
+            ↗️ Focus tmux
+          </button>
+          <button class="px-2 py-1 rounded text-xs text-[#f85149] hover:bg-[#21262d]">
+            ✕ End
+          </button>
+        </div>
+      </div>
+
+      <!-- Conversation / Terminal View -->
+      <div class="flex-1 overflow-y-auto p-4 terminal-output">
+        <!-- User Message -->
+        <div class="mb-4">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-xs text-[#58a6ff] font-medium">You</span>
+            <span class="text-xs text-[#8b949e]">2 min ago</span>
+          </div>
+          <div class="pl-4 border-l-2 border-[#30363d]">
+            <p>Implement the gold stage for the ETL pipeline. It should aggregate data from silver tables and produce business-ready summaries.</p>
+          </div>
+        </div>
+
+        <!-- Claude Thinking (collapsible) -->
+        <div class="mb-4">
+          <details class="group">
+            <summary class="flex items-center gap-2 cursor-pointer text-xs text-[#8b949e] hover:text-white">
+              <span class="group-open:rotate-90 transition-transform">▶</span>
+              <span>Thinking... (1.2s)</span>
+            </summary>
+            <div class="mt-2 p-3 rounded thinking-block text-xs text-[#8b949e] border border-[#30363d]">
+              <p>Let me understand the current ETL structure. I need to:</p>
+              <ul class="mt-2 list-disc list-inside">
+                <li>Check the existing silver stage output format</li>
+                <li>Design aggregation logic for gold tables</li>
+                <li>Implement error handling and validation</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+
+        <!-- Claude Response with Tool Calls -->
+        <div class="mb-4">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-xs text-[#a371f7] font-medium">Claude</span>
+            <span class="text-xs text-[#8b949e]">1 min ago</span>
+          </div>
+          <div class="pl-4 border-l-2 border-[#a371f7]">
+            <p class="mb-3">I'll implement the gold stage. First, let me check the existing ETL structure.</p>
+
+            <!-- Tool Call: Read -->
+            <details class="mb-2 group">
+              <summary class="flex items-center gap-2 px-2 py-1 rounded bg-[#21262d] cursor-pointer text-sm hover:bg-[#30363d]">
+                <span class="text-[#58a6ff]">📖</span>
+                <span class="text-[#8b949e]">Read</span>
+                <code class="text-xs">scripts/etl/stages/silver.py</code>
+                <span class="ml-auto text-xs text-[#3fb950]">✓</span>
+              </summary>
+              <div class="mt-1 p-2 rounded bg-[#0d1117] border border-[#30363d] text-xs overflow-x-auto">
+                <pre class="text-[#8b949e]">class SilverStage:
+    def transform(self, bronze_data):
+        # Normalize and clean data
+        return normalized_data</pre>
+              </div>
+            </details>
+
+            <!-- Tool Call: Write -->
+            <details class="mb-2 group">
+              <summary class="flex items-center gap-2 px-2 py-1 rounded bg-[#21262d] cursor-pointer text-sm hover:bg-[#30363d]">
+                <span class="text-[#3fb950]">✏️</span>
+                <span class="text-[#8b949e]">Write</span>
+                <code class="text-xs">scripts/etl/stages/gold.py</code>
+                <span class="ml-auto text-xs text-[#3fb950]">✓ Created</span>
+              </summary>
+              <div class="mt-1 p-2 rounded bg-[#0d1117] border border-[#30363d] text-xs overflow-x-auto">
+                <pre class="text-[#e6edf3]"><span class="text-[#ff7b72]">class</span> <span class="text-[#ffa657]">GoldStage</span>:
+    <span class="text-[#8b949e]">"""Business-ready aggregations from silver data."""</span>
+
+    <span class="text-[#ff7b72]">def</span> <span class="text-[#d2a8ff]">aggregate</span>(<span class="text-[#79c0ff]">self</span>, silver_data):
+        <span class="text-[#8b949e]"># Compute business metrics</span>
+        <span class="text-[#ff7b72]">return</span> aggregated</pre>
+              </div>
+            </details>
+
+            <p class="mt-3">I've created the gold stage with the basic structure. Now let me add the aggregation logic...</p>
+          </div>
+        </div>
+
+        <!-- Active indicator -->
+        <div class="flex items-center gap-2 text-[#8b949e] text-sm">
+          <span class="w-2 h-2 rounded-full bg-[#3fb950] status-active"></span>
+          <span>Claude is working...</span>
+        </div>
+      </div>
+
+      <!-- Input Area -->
+      <div class="border-t border-[#30363d] bg-[#161b22] p-4 flex-shrink-0">
+        <div class="flex gap-2">
+          <div class="flex-1 relative">
+            <textarea
+              placeholder="Send a message to this session... (⌘+Enter to send)"
+              class="w-full px-4 py-3 rounded-lg bg-[#0d1117] border border-[#30363d] text-sm resize-none focus:outline-none focus:border-[#58a6ff]"
+              rows="2"
+            ></textarea>
+            <div class="absolute right-2 bottom-2 flex items-center gap-2">
+              <button class="p-1 rounded text-[#8b949e] hover:text-white hover:bg-[#21262d]" title="Attach file">
+                📎
+              </button>
+              <button class="p-1 rounded text-[#8b949e] hover:text-white hover:bg-[#21262d]" title="Use template">
+                📝
+              </button>
+            </div>
+          </div>
+          <button class="px-4 py-2 rounded-lg bg-[#238636] text-white font-medium hover:bg-[#2ea043] self-end">
+            Send
+          </button>
+        </div>
+        <div class="flex items-center gap-4 mt-2 text-xs text-[#8b949e]">
+          <span>Context: 45% used</span>
+          <span>•</span>
+          <span>Session: 24 turns</span>
+          <span>•</span>
+          <span>Ledger: <a href="#" class="text-[#58a6ff]">etl-pipeline</a></span>
+        </div>
+      </div>
+    </main>
+
+    <!-- Right Sidebar: Context Panel -->
+    <aside class="w-72 border-l border-[#30363d] bg-[#161b22] flex flex-col flex-shrink-0 overflow-y-auto">
+      <!-- Ledger Info -->
+      <div class="p-4 border-b border-[#30363d]">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-medium text-[#8b949e] uppercase tracking-wide">Active Ledger</span>
+          <button class="text-xs text-[#58a6ff]">Edit</button>
+        </div>
+        <div class="p-3 rounded bg-[#0d1117] border border-[#30363d]">
+          <div class="font-medium text-sm mb-2">etl-pipeline</div>
+          <div class="text-xs text-[#8b949e] space-y-1">
+            <div><span class="text-[#8b949e]">Goal:</span> Build medallion architecture ETL</div>
+            <div><span class="text-[#8b949e]">State:</span> Phase 3 - Gold Stage</div>
+            <div><span class="text-[#8b949e]">Updated:</span> 2 min ago</div>
+          </div>
+          <button class="mt-3 w-full px-2 py-1.5 rounded bg-[#21262d] text-xs hover:bg-[#30363d]">
+            Open Ledger →
+          </button>
+        </div>
+      </div>
+
+      <!-- Files in Session -->
+      <div class="p-4 border-b border-[#30363d]">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-medium text-[#8b949e] uppercase tracking-wide">Files Touched</span>
+          <span class="text-xs text-[#8b949e]">7</span>
+        </div>
+        <div class="space-y-1 text-xs">
+          <div class="flex items-center gap-2 p-1.5 rounded hover:bg-[#21262d] cursor-pointer">
+            <span class="text-[#3fb950]">+</span>
+            <span class="truncate">scripts/etl/stages/gold.py</span>
+          </div>
+          <div class="flex items-center gap-2 p-1.5 rounded hover:bg-[#21262d] cursor-pointer">
+            <span class="text-[#58a6ff]">~</span>
+            <span class="truncate">scripts/etl/models.py</span>
+          </div>
+          <div class="flex items-center gap-2 p-1.5 rounded hover:bg-[#21262d] cursor-pointer">
+            <span class="text-[#8b949e]">·</span>
+            <span class="truncate text-[#8b949e]">scripts/etl/stages/silver.py</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Session Actions -->
+      <div class="p-4 border-b border-[#30363d]">
+        <div class="text-xs font-medium text-[#8b949e] uppercase tracking-wide mb-3">Actions</div>
+        <div class="space-y-2">
+          <button class="w-full px-3 py-2 rounded bg-[#21262d] text-sm text-left hover:bg-[#30363d] flex items-center gap-2">
+            <span>🔄</span> Resume from ledger
+          </button>
+          <button class="w-full px-3 py-2 rounded bg-[#21262d] text-sm text-left hover:bg-[#30363d] flex items-center gap-2">
+            <span>💾</span> Update ledger
+          </button>
+          <button class="w-full px-3 py-2 rounded bg-[#21262d] text-sm text-left hover:bg-[#30363d] flex items-center gap-2">
+            <span>📋</span> Create handoff
+          </button>
+          <button class="w-full px-3 py-2 rounded bg-[#21262d] text-sm text-left hover:bg-[#30363d] flex items-center gap-2">
+            <span>🔀</span> Split to new session
+          </button>
+        </div>
+      </div>
+
+      <!-- Related Sessions -->
+      <div class="p-4">
+        <div class="text-xs font-medium text-[#8b949e] uppercase tracking-wide mb-3">Related</div>
+        <div class="space-y-2">
+          <div class="p-2 rounded bg-[#21262d] hover:bg-[#30363d] cursor-pointer">
+            <div class="flex items-center gap-2 text-sm">
+              <span class="w-2 h-2 rounded-full bg-[#f85149]"></span>
+              <span>Voice Agent</span>
+            </div>
+            <div class="text-xs text-[#8b949e] mt-1">Shares: routes/agent.py</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Ledger Viewer Modal (click "Open Ledger" to see) -->
+  <div id="ledgerModal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-50" onclick="if(event.target === this) this.classList.add('hidden')">
+    <div class="bg-[#161b22] rounded-lg border border-[#30363d] w-[800px] h-[600px] flex flex-col">
+      <div class="flex items-center justify-between p-4 border-b border-[#30363d]">
+        <div class="flex items-center gap-2">
+          <span class="text-[#8b949e]">📄</span>
+          <span class="font-medium">CONTINUITY_CLAUDE-etl-pipeline.md</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="px-2 py-1 rounded text-xs bg-[#21262d] hover:bg-[#30363d]">Edit</button>
+          <button onclick="document.getElementById('ledgerModal').classList.add('hidden')" class="text-[#8b949e] hover:text-white">✕</button>
+        </div>
+      </div>
+      <div class="flex-1 p-4 overflow-y-auto terminal-output">
+        <pre class="text-sm text-[#e6edf3]"><span class="text-[#58a6ff]"># Session: etl-pipeline</span>
+<span class="text-[#8b949e]">Updated: 2026-01-25T12:00:00Z</span>
+
+<span class="text-[#58a6ff]">## Goal</span>
+Build medallion architecture ETL for executive-assistant.
+- Bronze: Raw data ingestion
+- Silver: Cleaned and normalized
+- Gold: Business-ready aggregations
+
+<span class="text-[#58a6ff]">## State</span>
+- Done:
+  - [x] Phase 1: Bronze stage (raw Slack/Gmail ingestion)
+  - [x] Phase 2: Silver stage (normalization, dedup)
+- Now: [→] Phase 3: Gold stage (aggregations)
+- Next: Phase 4: Orchestration
+
+<span class="text-[#58a6ff]">## Key Decisions</span>
+- Using SQLite for medallion storage
+- Pydantic models for validation
+- Streaming for large datasets
+
+<span class="text-[#58a6ff]">## Working Set</span>
+- scripts/etl/stages/*.py
+- scripts/etl/models.py
+- thoughts/shared/etl.db</pre>
+      </div>
+      <div class="p-4 border-t border-[#30363d] flex items-center justify-between">
+        <span class="text-xs text-[#8b949e]">Last edited 2 min ago</span>
+        <div class="flex items-center gap-2">
+          <button class="px-3 py-1.5 rounded bg-[#21262d] text-sm hover:bg-[#30363d]">Resume This</button>
+          <button class="px-3 py-1.5 rounded bg-[#238636] text-white text-sm hover:bg-[#2ea043]">Open in Session</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Open ledger modal
+    document.querySelector('[class*="Open Ledger"]')?.addEventListener('click', () => {
+      document.getElementById('ledgerModal').classList.remove('hidden');
+    });
+
+    // Also trigger from button text
+    document.querySelectorAll('button').forEach(btn => {
+      if (btn.textContent.includes('Open Ledger')) {
+        btn.addEventListener('click', () => {
+          document.getElementById('ledgerModal').classList.remove('hidden');
+        });
+      }
+    });
+  </script>
+</body>
+</html>
