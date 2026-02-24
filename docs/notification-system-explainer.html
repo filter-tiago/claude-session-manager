@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-First Notification System - How It Works</title>
+  <style>
+    :root {
+      --cream: #faf8f5;
+      --paper: #f5f2eb;
+      --ink: #2d2a26;
+      --ink-light: #5c5753;
+      --accent-blue: #4a7c9b;
+      --accent-green: #5a8a5a;
+      --accent-orange: #c77b3f;
+      --accent-red: #b85450;
+      --accent-purple: #7b6b8a;
+      --shadow: rgba(45, 42, 38, 0.08);
+      --border: #e0dcd4;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.7;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      margin-bottom: 60px;
+      padding-bottom: 40px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: normal;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--ink-light);
+      font-style: italic;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 6px 16px;
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-family: 'Courier New', monospace;
+      color: var(--ink-light);
+    }
+
+    /* Section */
+    section {
+      margin-bottom: 60px;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: normal;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    h2 .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: var(--ink);
+      color: var(--cream);
+      border-radius: 50%;
+      font-size: 0.9rem;
+      font-family: 'Courier New', monospace;
+    }
+
+    /* Flow Diagram */
+    .flow-diagram {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 40px;
+      margin: 30px 0;
+    }
+
+    .flow-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+
+    .flow-box {
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 24px;
+      text-align: center;
+      min-width: 180px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .flow-box:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px var(--shadow);
+    }
+
+    .flow-box.hook {
+      border-color: var(--accent-blue);
+      background: linear-gradient(135deg, white 0%, #f0f5f8 100%);
+    }
+
+    .flow-box.watcher {
+      border-color: var(--accent-green);
+      background: linear-gradient(135deg, white 0%, #f0f8f0 100%);
+    }
+
+    .flow-box.manager {
+      border-color: var(--accent-orange);
+      background: linear-gradient(135deg, white 0%, #faf5f0 100%);
+    }
+
+    .flow-box.ai {
+      border-color: var(--accent-purple);
+      background: linear-gradient(135deg, white 0%, #f5f0f8 100%);
+    }
+
+    .flow-box.output {
+      border-color: var(--accent-red);
+      background: linear-gradient(135deg, white 0%, #f8f0f0 100%);
+    }
+
+    .flow-box-icon {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+
+    .flow-box-title {
+      font-weight: bold;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+    }
+
+    .flow-box-desc {
+      font-size: 0.8rem;
+      color: var(--ink-light);
+      font-style: italic;
+    }
+
+    .flow-arrow {
+      font-size: 1.5rem;
+      color: var(--ink-light);
+      animation: pulse 2s infinite;
+    }
+
+    .flow-arrow-down {
+      display: block;
+      text-align: center;
+      margin: 10px 0;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    /* Cards Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin: 30px 0;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      box-shadow: 0 12px 32px var(--shadow);
+      transform: translateY(-4px);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .card-icon.blue { background: #e8f0f4; }
+    .card-icon.green { background: #e8f4e8; }
+    .card-icon.orange { background: #f4ede8; }
+    .card-icon.purple { background: #ede8f4; }
+    .card-icon.red { background: #f4e8e8; }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+
+    .card-content {
+      font-size: 0.9rem;
+      color: var(--ink-light);
+    }
+
+    .card-content ul {
+      margin: 12px 0;
+      padding-left: 20px;
+    }
+
+    .card-content li {
+      margin: 6px 0;
+    }
+
+    /* Code Block */
+    .code-block {
+      background: #2d2a26;
+      color: #f5f2eb;
+      border-radius: 8px;
+      padding: 20px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+
+    .code-block .comment {
+      color: #8a8580;
+    }
+
+    .code-block .keyword {
+      color: #c77b3f;
+    }
+
+    .code-block .string {
+      color: #5a8a5a;
+    }
+
+    .code-block .type {
+      color: #4a7c9b;
+    }
+
+    /* Sound Table */
+    .sound-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 0.9rem;
+    }
+
+    .sound-table th,
+    .sound-table td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sound-table th {
+      background: var(--paper);
+      font-weight: normal;
+      font-style: italic;
+      color: var(--ink-light);
+    }
+
+    .sound-table tr:hover td {
+      background: var(--paper);
+    }
+
+    .sound-dot {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    .sound-dot.green { background: var(--accent-green); }
+    .sound-dot.orange { background: var(--accent-orange); }
+    .sound-dot.red { background: var(--accent-red); }
+    .sound-dot.gray { background: #9a9590; }
+
+    /* Tray Icons */
+    .tray-demo {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      padding: 40px;
+      background: var(--paper);
+      border-radius: 12px;
+      margin: 30px 0;
+    }
+
+    .tray-state {
+      text-align: center;
+    }
+
+    .tray-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      margin: 0 auto 12px;
+      box-shadow: 0 4px 12px var(--shadow);
+      transition: all 0.3s ease;
+    }
+
+    .tray-icon:hover {
+      transform: scale(1.1);
+    }
+
+    .tray-icon.idle { background: #6b7280; }
+    .tray-icon.active { background: #22c55e; }
+    .tray-icon.attention {
+      background: #f97316;
+      animation: tray-pulse 1s infinite;
+    }
+    .tray-icon.error { background: #ef4444; }
+
+    @keyframes tray-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .tray-label {
+      font-size: 0.85rem;
+      color: var(--ink-light);
+      font-style: italic;
+    }
+
+    /* File Tree */
+    .file-tree {
+      background: var(--paper);
+      border-radius: 8px;
+      padding: 20px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      margin: 20px 0;
+    }
+
+    .file-tree .folder {
+      color: var(--accent-blue);
+    }
+
+    .file-tree .file {
+      color: var(--ink);
+      margin-left: 20px;
+    }
+
+    .file-tree .new {
+      color: var(--accent-green);
+    }
+
+    .file-tree .modified {
+      color: var(--accent-orange);
+    }
+
+    /* Interactive Demo */
+    .demo-panel {
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 30px 0;
+    }
+
+    .demo-header {
+      background: var(--paper);
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .demo-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .demo-dot.red { background: #ff5f57; }
+    .demo-dot.yellow { background: #febc2e; }
+    .demo-dot.green { background: #28c840; }
+
+    .demo-title {
+      margin-left: 12px;
+      font-size: 0.85rem;
+      color: var(--ink-light);
+    }
+
+    .demo-content {
+      padding: 24px;
+    }
+
+    .demo-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .demo-btn {
+      padding: 10px 20px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: white;
+      font-family: inherit;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .demo-btn:hover {
+      background: var(--paper);
+      transform: translateY(-1px);
+    }
+
+    .demo-btn.active {
+      background: var(--ink);
+      color: white;
+      border-color: var(--ink);
+    }
+
+    .demo-output {
+      background: var(--paper);
+      border-radius: 8px;
+      padding: 16px;
+      min-height: 120px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      white-space: pre-wrap;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding-top: 40px;
+      border-top: 2px solid var(--border);
+      color: var(--ink-light);
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: var(--accent-blue);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 1.8rem; }
+      .flow-diagram { padding: 20px; }
+      .tray-demo { gap: 20px; flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>AI-First Notification System</h1>
+      <p class="subtitle">Intelligent alerts for Claude Code sessions</p>
+      <span class="badge">Claude Session Manager v3</span>
+    </header>
+
+    <!-- Overview Section -->
+    <section>
+      <h2><span class="num">1</span> The Big Picture</h2>
+      <p>When a Claude Code session stops, the notification system analyzes what happened and delivers context-aware alerts through multiple channels.</p>
+
+      <div class="flow-diagram">
+        <div class="flow-row">
+          <div class="flow-box hook">
+            <div class="flow-box-icon">🪝</div>
+            <div class="flow-box-title">Stop Hook</div>
+            <div class="flow-box-desc">Python script detects session end</div>
+          </div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-box watcher">
+            <div class="flow-box-icon">👁️</div>
+            <div class="flow-box-title">File Watcher</div>
+            <div class="flow-box-desc">Chokidar monitors pending/</div>
+          </div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-box ai">
+            <div class="flow-box-icon">🧠</div>
+            <div class="flow-box-title">AI Analyzer</div>
+            <div class="flow-box-desc">Scores importance, generates summary</div>
+          </div>
+        </div>
+
+        <div class="flow-arrow-down">↓</div>
+
+        <div class="flow-row">
+          <div class="flow-box manager">
+            <div class="flow-box-icon">🎛️</div>
+            <div class="flow-box-title">Notification Manager</div>
+            <div class="flow-box-desc">Routes to appropriate channels</div>
+          </div>
+        </div>
+
+        <div class="flow-arrow-down">↓</div>
+
+        <div class="flow-row">
+          <div class="flow-box output">
+            <div class="flow-box-icon">🔔</div>
+            <div class="flow-box-title">Native Alert</div>
+            <div class="flow-box-desc">macOS Notification Center</div>
+          </div>
+          <div class="flow-box output">
+            <div class="flow-box-icon">🔊</div>
+            <div class="flow-box-title">Sound</div>
+            <div class="flow-box-desc">Context-specific tone</div>
+          </div>
+          <div class="flow-box output">
+            <div class="flow-box-icon">🟠</div>
+            <div class="flow-box-title">Tray Icon</div>
+            <div class="flow-box-desc">Dynamic state indicator</div>
+          </div>
+          <div class="flow-box output">
+            <div class="flow-box-icon">💬</div>
+            <div class="flow-box-title">In-App Toast</div>
+            <div class="flow-box-desc">Renderer notification</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Components Section -->
+    <section>
+      <h2><span class="num">2</span> Core Components</h2>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon blue">🪝</div>
+            <div class="card-title">Stop Hook</div>
+          </div>
+          <div class="card-content">
+            <p>Python script that runs when Claude Code stops.</p>
+            <ul>
+              <li>Classifies stop type (completed, blocked, error)</li>
+              <li>Extracts context (files modified, tools used)</li>
+              <li>Writes JSON event to pending directory</li>
+            </ul>
+            <code style="font-size: 0.8rem; color: var(--ink-light)">~/.claude/hooks/stop-verify-completion.py</code>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon green">👁️</div>
+            <div class="card-title">Notification Watcher</div>
+          </div>
+          <div class="card-content">
+            <p>Chokidar-based file system watcher.</p>
+            <ul>
+              <li>Monitors ~/.claude/notifications/pending/</li>
+              <li>Parses and validates JSON events</li>
+              <li>Moves processed files to processed/</li>
+            </ul>
+            <code style="font-size: 0.8rem; color: var(--ink-light)">electron/services/notification-watcher.ts</code>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon purple">🧠</div>
+            <div class="card-title">AI Analyzer</div>
+          </div>
+          <div class="card-content">
+            <p>Two-path intelligence system.</p>
+            <ul>
+              <li><strong>Fast path:</strong> Rule-based scoring (always runs)</li>
+              <li><strong>Rich path:</strong> Claude API for high-importance events</li>
+              <li>Generates summaries and suggested actions</li>
+            </ul>
+            <code style="font-size: 0.8rem; color: var(--ink-light)">electron/services/ai-analyzer.ts</code>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon orange">🎛️</div>
+            <div class="card-title">Notification Manager</div>
+          </div>
+          <div class="card-content">
+            <p>Central routing hub for all notifications.</p>
+            <ul>
+              <li>Coordinates sound, native alerts, tray, renderer</li>
+              <li>Tracks pending notifications for badge count</li>
+              <li>Configurable per-channel toggles</li>
+            </ul>
+            <code style="font-size: 0.8rem; color: var(--ink-light)">electron/services/notification-manager.ts</code>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon red">🔊</div>
+            <div class="card-title">Sound Manager</div>
+          </div>
+          <div class="card-content">
+            <p>Cross-platform audio playback.</p>
+            <ul>
+              <li>Generates WAV files programmatically</li>
+              <li>macOS: afplay, Linux: paplay, Windows: PowerShell</li>
+              <li>Volume control (0-100%)</li>
+            </ul>
+            <code style="font-size: 0.8rem; color: var(--ink-light)">electron/services/sound-manager.ts</code>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon blue">🟢</div>
+            <div class="card-title">Tray Manager</div>
+          </div>
+          <div class="card-content">
+            <p>Dynamic system tray icon states.</p>
+            <ul>
+              <li>Generates colored circle PNG icons</li>
+              <li>Pulse animation for attention state</li>
+              <li>macOS dock badge for pending count</li>
+            </ul>
+            <code style="font-size: 0.8rem; color: var(--ink-light)">electron/services/tray-manager.ts</code>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Event Schema Section -->
+    <section>
+      <h2><span class="num">3</span> Event Schema</h2>
+      <p>The notification event structure that flows through the system.</p>
+
+      <div class="code-block">
+<span class="keyword">interface</span> <span class="type">SessionNotificationEvent</span> {
+  <span class="comment">// Identification</span>
+  eventId: <span class="type">string</span>;          <span class="comment">// UUID for this event</span>
+  timestamp: <span class="type">string</span>;        <span class="comment">// ISO 8601 timestamp</span>
+  sessionId: <span class="type">string</span>;        <span class="comment">// Claude session ID</span>
+
+  <span class="comment">// Context</span>
+  projectName: <span class="type">string</span>;      <span class="comment">// Project folder name</span>
+  projectPath: <span class="type">string</span>;      <span class="comment">// Full path to project</span>
+
+  <span class="comment">// Classification</span>
+  stopType: <span class="string">'completed'</span> | <span class="string">'blocked'</span> | <span class="string">'error'</span> | <span class="string">'user_stop'</span>;
+
+  <span class="comment">// Verification result</span>
+  verification: {
+    required: <span class="type">boolean</span>;      <span class="comment">// Was verification needed?</span>
+    passed: <span class="type">boolean</span>;        <span class="comment">// Did it pass?</span>
+    reason?: <span class="type">string</span>;        <span class="comment">// Why blocked/failed</span>
+  };
+
+  <span class="comment">// Context for AI analysis</span>
+  lastMessages: <span class="type">string</span>[];   <span class="comment">// Last 3 assistant messages</span>
+  toolsUsed: <span class="type">string</span>[];      <span class="comment">// Tools used in session</span>
+  filesModified: <span class="type">string</span>[]; <span class="comment">// Files changed</span>
+
+  <span class="comment">// Pre-analysis from hook</span>
+  preAnalysis: {
+    codeChanged: <span class="type">boolean</span>;   <span class="comment">// Were code files modified?</span>
+    buildRan: <span class="type">boolean</span>;      <span class="comment">// Was build command run?</span>
+    testsRan: <span class="type">boolean</span>;      <span class="comment">// Were tests run?</span>
+  };
+}
+      </div>
+    </section>
+
+    <!-- Routing Logic Section -->
+    <section>
+      <h2><span class="num">4</span> Routing Logic</h2>
+      <p>How notifications are routed based on stop type and importance score.</p>
+
+      <table class="sound-table">
+        <thead>
+          <tr>
+            <th>Stop Type</th>
+            <th>Importance</th>
+            <th>Sound</th>
+            <th>Native Alert</th>
+            <th>Tray State</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>blocked</strong></td>
+            <td>any</td>
+            <td><span class="sound-dot orange"></span>attention</td>
+            <td>Yes, actionable</td>
+            <td>Orange pulse</td>
+          </tr>
+          <tr>
+            <td><strong>error</strong></td>
+            <td>any</td>
+            <td><span class="sound-dot red"></span>error</td>
+            <td>Yes, urgent</td>
+            <td>Red</td>
+          </tr>
+          <tr>
+            <td><strong>completed</strong></td>
+            <td>high (≥50)</td>
+            <td><span class="sound-dot green"></span>success</td>
+            <td>Yes, with summary</td>
+            <td>Green</td>
+          </tr>
+          <tr>
+            <td><strong>completed</strong></td>
+            <td>low (&lt;50)</td>
+            <td><span class="sound-dot gray"></span>subtle</td>
+            <td>No</td>
+            <td>Green</td>
+          </tr>
+          <tr>
+            <td><strong>user_stop</strong></td>
+            <td>any</td>
+            <td>—</td>
+            <td>No</td>
+            <td>Idle</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Importance Scoring Section -->
+    <section>
+      <h2><span class="num">5</span> Importance Scoring</h2>
+      <p>The AI Analyzer calculates an importance score (0-100) using these factors:</p>
+
+      <div class="code-block">
+<span class="comment">// Importance Score Calculation</span>
+
+score = <span class="type">0</span>
+
+<span class="comment">// Files modified (max +50)</span>
+score += min(filesModified.length * <span class="type">10</span>, <span class="type">50</span>)
+
+<span class="comment">// Heavy tools used (Write, Edit, Bash, NotebookEdit)</span>
+score += heavyToolCount * <span class="type">5</span>
+
+<span class="comment">// Pre-analysis factors</span>
+<span class="keyword">if</span> (codeChanged)  score += <span class="type">15</span>
+<span class="keyword">if</span> (buildRan)     score += <span class="type">10</span>
+<span class="keyword">if</span> (testsRan)     score += <span class="type">10</span>
+
+<span class="comment">// Verification failure</span>
+<span class="keyword">if</span> (verification.required && !verification.passed) {
+  score += <span class="type">30</span>
+}
+
+<span class="comment">// Importance Levels</span>
+critical: score >= <span class="type">80</span>
+high:     score >= <span class="type">50</span>
+medium:   score >= <span class="type">20</span>
+low:      score <  <span class="type">20</span>
+      </div>
+    </section>
+
+    <!-- Tray Icons Section -->
+    <section>
+      <h2><span class="num">6</span> Tray Icon States</h2>
+      <p>Dynamic tray icons provide at-a-glance status of your Claude sessions.</p>
+
+      <div class="tray-demo">
+        <div class="tray-state">
+          <div class="tray-icon idle"></div>
+          <div class="tray-label">Idle</div>
+          <div style="font-size: 0.75rem; color: var(--ink-light); margin-top: 4px;">#6b7280</div>
+        </div>
+        <div class="tray-state">
+          <div class="tray-icon active"></div>
+          <div class="tray-label">Active</div>
+          <div style="font-size: 0.75rem; color: var(--ink-light); margin-top: 4px;">#22c55e</div>
+        </div>
+        <div class="tray-state">
+          <div class="tray-icon attention"></div>
+          <div class="tray-label">Attention</div>
+          <div style="font-size: 0.75rem; color: var(--ink-light); margin-top: 4px;">#f97316 (pulsing)</div>
+        </div>
+        <div class="tray-state">
+          <div class="tray-icon error"></div>
+          <div class="tray-label">Error</div>
+          <div style="font-size: 0.75rem; color: var(--ink-light); margin-top: 4px;">#ef4444</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- File Structure Section -->
+    <section>
+      <h2><span class="num">7</span> File Structure</h2>
+
+      <div class="file-tree">
+<span class="folder">~/.claude/</span>
+├── <span class="folder">hooks/</span>
+│   └── <span class="modified">stop-verify-completion.py</span>  <span style="color: var(--ink-light)"># Extended to emit events</span>
+└── <span class="folder">notifications/</span>
+    ├── <span class="folder">pending/</span>   <span style="color: var(--ink-light)"># New events from hooks</span>
+    └── <span class="folder">processed/</span> <span style="color: var(--ink-light)"># Handled events (7-day retention)</span>
+
+<span class="folder">electron/services/</span>
+├── <span class="new">notification-watcher.ts</span>   <span style="color: var(--ink-light)"># File system watcher</span>
+├── <span class="new">notification-manager.ts</span>   <span style="color: var(--ink-light)"># Central routing hub</span>
+├── <span class="new">sound-manager.ts</span>          <span style="color: var(--ink-light)"># Cross-platform audio</span>
+├── <span class="new">ai-analyzer.ts</span>            <span style="color: var(--ink-light)"># Importance scoring</span>
+└── <span class="new">tray-manager.ts</span>           <span style="color: var(--ink-light)"># Dynamic tray icons</span>
+
+<span class="folder">src/pages/</span>
+└── <span class="new">NotificationSettingsPage.tsx</span> <span style="color: var(--ink-light)"># Settings UI</span>
+      </div>
+    </section>
+
+    <!-- Interactive Demo Section -->
+    <section>
+      <h2><span class="num">8</span> Interactive Demo</h2>
+
+      <div class="demo-panel">
+        <div class="demo-header">
+          <div class="demo-dot red"></div>
+          <div class="demo-dot yellow"></div>
+          <div class="demo-dot green"></div>
+          <span class="demo-title">Notification Simulator</span>
+        </div>
+        <div class="demo-content">
+          <p style="margin-bottom: 16px; color: var(--ink-light); font-size: 0.9rem;">
+            Click a stop type to see what notification would be generated:
+          </p>
+          <div class="demo-buttons">
+            <button class="demo-btn" onclick="simulate('completed_high')">Completed (High)</button>
+            <button class="demo-btn" onclick="simulate('completed_low')">Completed (Low)</button>
+            <button class="demo-btn" onclick="simulate('blocked')">Blocked</button>
+            <button class="demo-btn" onclick="simulate('error')">Error</button>
+            <button class="demo-btn" onclick="simulate('user_stop')">User Stop</button>
+          </div>
+          <div class="demo-output" id="demo-output">Click a button above to simulate a notification...</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>Part of <a href="#">Claude Session Manager v3</a></p>
+      <p style="margin-top: 8px; font-size: 0.85rem;">Built with Electron + React + TypeScript</p>
+    </footer>
+  </div>
+
+  <script>
+    function simulate(type) {
+      const output = document.getElementById('demo-output');
+      const buttons = document.querySelectorAll('.demo-btn');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      const scenarios = {
+        'completed_high': {
+          event: {
+            stopType: 'completed',
+            projectName: 'my-project',
+            filesModified: ['src/App.tsx', 'src/utils.ts', 'package.json'],
+            toolsUsed: ['Write', 'Edit', 'Bash'],
+            preAnalysis: { codeChanged: true, buildRan: true, testsRan: true }
+          },
+          score: 75,
+          result: `📊 IMPORTANCE: 75 (high)
+
+🔊 SOUND: success.wav (pleasant ascending tone)
+🔔 NATIVE: Yes
+   Title: "my-project"
+   Body: "my-project: Implemented new feature with tests"
+
+🟢 TRAY: Active (green)
+💬 IN-APP: Toast with AI summary`
+        },
+        'completed_low': {
+          event: {
+            stopType: 'completed',
+            projectName: 'my-project',
+            filesModified: ['README.md'],
+            toolsUsed: ['Read', 'Write'],
+            preAnalysis: { codeChanged: false, buildRan: false, testsRan: false }
+          },
+          score: 15,
+          result: `📊 IMPORTANCE: 15 (low)
+
+🔊 SOUND: subtle.wav (soft single beep)
+🔔 NATIVE: No (low importance)
+
+🟢 TRAY: Active (green)
+💬 IN-APP: Silent or minimal`
+        },
+        'blocked': {
+          event: {
+            stopType: 'blocked',
+            projectName: 'my-project',
+            verification: { required: true, passed: false, reason: 'No build command detected' },
+            filesModified: ['src/main.ts'],
+            preAnalysis: { codeChanged: true, buildRan: false, testsRan: false }
+          },
+          score: 55,
+          result: `📊 IMPORTANCE: 55 (high)
+
+🔊 SOUND: attention.wav (two quick beeps)
+🔔 NATIVE: Yes (actionable)
+   Title: "Needs Verification"
+   Body: "my-project: No build command detected"
+
+🟠 TRAY: Attention (orange, pulsing)
+🔢 BADGE: +1 pending
+💬 IN-APP: Actionable toast with suggested action`
+        },
+        'error': {
+          event: {
+            stopType: 'error',
+            projectName: 'my-project',
+            verification: { required: false, passed: false, reason: 'Session crashed unexpectedly' }
+          },
+          score: 90,
+          result: `📊 IMPORTANCE: 90 (critical)
+
+🔊 SOUND: error.wav (descending tone)
+🔔 NATIVE: Yes (urgent)
+   Title: "Session Crashed"
+   Body: "my-project: Session crashed unexpectedly"
+
+🔴 TRAY: Error (red)
+🔢 BADGE: +1 pending
+💬 IN-APP: Urgent toast`
+        },
+        'user_stop': {
+          event: {
+            stopType: 'user_stop',
+            projectName: 'my-project',
+            filesModified: [],
+            toolsUsed: ['Read']
+          },
+          score: 0,
+          result: `📊 IMPORTANCE: 0 (low)
+
+🔊 SOUND: None (user-initiated)
+🔔 NATIVE: No
+
+⚪ TRAY: Idle (gray)
+💬 IN-APP: No notification
+
+User explicitly stopped the session - no alerts needed.`
+        }
+      };
+
+      const scenario = scenarios[type];
+      output.textContent = scenario.result;
+    }
+  </script>
+</body>
+</html>
