@@ -18,7 +18,9 @@ function copyPreload(): Plugin {
       fs.copyFileSync('electron/preload.cjs', 'dist-electron/preload.cjs');
     },
     handleHotUpdate({ file }) {
-      if (file.endsWith('preload.cjs')) {
+      // Only trigger for source file, not destination
+      // Check: ends with electron/preload.cjs AND does not contain dist-electron
+      if (file.endsWith('electron/preload.cjs') && !file.includes('dist-electron')) {
         fs.copyFileSync('electron/preload.cjs', 'dist-electron/preload.cjs');
         console.log('[Preload] Copied preload.cjs');
       }
@@ -28,6 +30,10 @@ function copyPreload(): Plugin {
 
 // https://vite.dev/config/
 export default defineConfig({
+  server: {
+    port: 5200,
+    strictPort: true, // Fail if port is in use instead of trying another
+  },
   plugins: [
     react(),
     copyPreload(),
@@ -39,7 +45,7 @@ export default defineConfig({
           build: {
             outDir: 'dist-electron',
             rollupOptions: {
-              external: ['electron', 'better-sqlite3'],
+              external: ['electron', 'better-sqlite3', 'node-pty'],
             },
           },
         },
@@ -57,6 +63,14 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, 'index.html'),
+      },
+      output: {
+        // 4C: Manual chunks — split heavy vendor deps into separate cacheable bundles
+        manualChunks: {
+          'vendor-xterm': ['xterm', 'xterm-addon-fit', 'xterm-addon-web-links'],
+          'vendor-markdown': ['react-markdown', 'remark-gfm'],
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+        },
       },
     },
   },

@@ -7,11 +7,75 @@
  */
 
 import { exec } from 'child_process';
+import path from 'path';
 import { promisify } from 'util';
-import { getSessions, updateSessionTmux } from './database';
+import { getDb, getSessions, updateSessionTmux, updateSessionTmuxAlive } from './database';
 import type { TmuxPane, Session } from '../../src/types/electron';
 
 const execAsync = promisify(exec);
+
+/**
+ * Get the default tmux socket path for the current user
+ */
+function getTmuxSocketPath(): string {
+  const uid = process.getuid?.() ?? 501;
+  return `/private/tmp/tmux-${uid}/default`;
+}
+
+// Generate default tmux session name from project path
+// e.g. claude-session-manager → csm
+export function generateDefaultTmuxName(projectPath: string): string {
+  const basename = path.basename(projectPath);
+  return basename.split('-').map(s => s[0] || '').join('') || 'cc';
+}
+
+/**
+ * Generate a unique tmux session name using try-create-catch-duplicate pattern
+ * Returns the name of the session that was successfully created
+ */
+async function createUniqueTmuxSession(
+  baseName: string,
+  projectPath: string
+): Promise<string> {
+  const socketPath = getTmuxSocketPath();
+
+  // Sanitize base name
+  const sanitized = baseName
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, '-')
+    .replace(/-+/g, '-')
+    .substring(0, 32);
+
+  // Candidates: name, name-2, name-3, ..., name-10
+  const candidates = [
+    sanitized,
+    ...Array.from({ length: 9 }, (_, i) => `${sanitized}-${i + 2}`.substring(0, 32)),
+  ];
+
+  for (const name of candidates) {
+    try {
+      await execAsync(
+        `tmux -S "${socketPath}" new-session -d -s "${name}" -c "${projectPath}"`
+      );
+      console.log(`[tmux Mapper] Created tmux session: ${name}`);
+      return name;
+    } catch (error: unknown) {
+      const err = error as { message?: string; stderr?: string };
+      const msg = err.message || '';
+      const stderr = err.stderr || '';
+
+      if (msg.includes('duplicate session') || stderr.includes('duplicate session')) {
+        console.log(`[tmux Mapper] Session "${name}" exists, trying next`);
+        continue;
+      }
+      throw error;
+    }
+  }
+
+  // All candidates taken - this shouldn't happen, but return the base anyway
+  console.warn(`[tmux Mapper] All session names taken, returning: ${sanitized}`);
+  return sanitized;
+}
 
 // Cache of pane mappings
 let paneCache: Map<string, string> = new Map(); // pane_id -> session_id
@@ -39,9 +103,10 @@ export async function isTmuxAvailable(): Promise<boolean> {
  */
 export async function getTmuxPanes(): Promise<TmuxPane[]> {
   try {
+    const socketPath = getTmuxSocketPath();
     // Format: session_name:window_index.pane_index pane_pid pane_current_path
     const { stdout } = await execAsync(
-      'tmux list-panes -a -F "#{session_name}:#{window_index}.#{pane_index} #{pane_pid} #{pane_current_path}"'
+      `tmux -S "${socketPath}" list-panes -a -F "#{session_name}:#{window_index}.#{pane_index} #{pane_pid} #{pane_current_path}"`
     );
 
     const panes: TmuxPane[] = [];
@@ -169,6 +234,9 @@ export async function mapAllPanes(): Promise<Map<string, string>> {
   const panes = await getTmuxPanes();
   const sessions = getSessions();
 
+  // Track sessions with live Claude processes
+  const sessionsWithLiveClaude = new Set<string>();
+
   // Index sessions by project path for quick lookup
   const sessionsByPath = new Map<string, Session[]>();
   for (const session of sessions) {
@@ -183,9 +251,17 @@ export async function mapAllPanes(): Promise<Map<string, string>> {
 
     // Find Claude processes in this pane
     const claudePids = await findClaudeProcesses(pane.pid);
+    const hasClaudeRunning = claudePids.length > 0;
 
-    if (claudePids.length === 0) {
-      // No Claude process in this pane
+    if (!hasClaudeRunning) {
+      // No Claude process in this pane - check if any session was mapped here
+      // and mark it as not alive
+      for (const session of sessions) {
+        if (session.tmux_session === pane.session &&
+            session.tmux_pane === `${pane.window}.${pane.pane}`) {
+          updateSessionTmuxAlive(session.session_id, false);
+        }
+      }
       continue;
     }
 
@@ -204,6 +280,7 @@ export async function mapAllPanes(): Promise<Map<string, string>> {
       if (sorted.length > 0) {
         const matchedSession = sorted[0];
         newCache.set(paneId, matchedSession.session_id);
+        sessionsWithLiveClaude.add(matchedSession.session_id);
 
         // Update session with tmux info
         updateSessionTmux(
@@ -212,6 +289,27 @@ export async function mapAllPanes(): Promise<Map<string, string>> {
           `${pane.window}.${pane.pane}`,
           pane.pid
         );
+
+        // Mark session as having live Claude process
+        updateSessionTmuxAlive(matchedSession.session_id, true);
+      }
+    }
+  }
+
+  // Update sessions that had tmux mapping but no longer have live Claude
+  for (const session of sessions) {
+    if (session.tmux_session && session.tmux_pane && !sessionsWithLiveClaude.has(session.session_id)) {
+      // Session had a tmux mapping but wasn't matched to a live Claude
+      // Check if the pane still exists
+      const paneExists = panes.some(
+        p => p.session === session.tmux_session &&
+             `${p.window}.${p.pane}` === session.tmux_pane
+      );
+
+      if (!paneExists) {
+        // Pane no longer exists - clear tmux mapping and mark as dead
+        updateSessionTmux(session.session_id, null, null, null);
+        updateSessionTmuxAlive(session.session_id, false);
       }
     }
   }
@@ -263,9 +361,10 @@ export async function getPaneForSession(sessionId: string): Promise<TmuxPane | n
  */
 export async function focusPane(pane: TmuxPane): Promise<boolean> {
   try {
+    const socketPath = getTmuxSocketPath();
     const target = `${pane.session}:${pane.window}.${pane.pane}`;
-    await execAsync(`tmux select-window -t "${pane.session}:${pane.window}"`);
-    await execAsync(`tmux select-pane -t "${target}"`);
+    await execAsync(`tmux -S "${socketPath}" select-window -t "${pane.session}:${pane.window}"`);
+    await execAsync(`tmux -S "${socketPath}" select-pane -t "${target}"`);
     return true;
   } catch (error) {
     console.error('[tmux Mapper] Failed to focus pane:', error);
@@ -281,26 +380,18 @@ export async function spawnClaudeSession(
   options?: { task?: string; ledger?: string; tmuxSession?: string }
 ): Promise<{ success: boolean; error?: string; pane?: TmuxPane }> {
   try {
-    // Determine target tmux session
-    const tmuxSession = options?.tmuxSession || 'claude';
+    const socketPath = getTmuxSocketPath();
 
-    // Check if tmux session exists, create if not
-    try {
-      await execAsync(`tmux has-session -t ${tmuxSession} 2>/dev/null`);
-    } catch {
-      // Session doesn't exist, create it
-      await execAsync(`tmux new-session -d -s ${tmuxSession} -c "${projectPath}"`);
-    }
+    // Determine base tmux session name
+    const baseName = options?.tmuxSession || generateDefaultTmuxName(projectPath);
 
-    // Create a new window in the session
-    const { stdout: windowIndex } = await execAsync(
-      `tmux new-window -t ${tmuxSession} -c "${projectPath}" -P -F "#{window_index}"`
-    );
+    // Create a unique tmux session (handles duplicates automatically)
+    const tmuxSession = await createUniqueTmuxSession(baseName, projectPath);
 
     // Build the claude command
     let claudeCmd = 'claude';
     if (options?.ledger) {
-      claudeCmd += ` --resume ${options.ledger}`;
+      claudeCmd += ` --resume ${options.ledger} --dangerously-skip-permissions`;
     }
     if (options?.task) {
       // Escape the task for shell
@@ -308,18 +399,18 @@ export async function spawnClaudeSession(
       claudeCmd += ` '${escapedTask}'`;
     }
 
-    // Send the claude command to the new pane
-    const target = `${tmuxSession}:${windowIndex.trim()}.0`;
-    await execAsync(`tmux send-keys -t "${target}" '${claudeCmd}' Enter`);
+    // Send the claude command to the new session's first pane
+    const target = `${tmuxSession}:0.0`;
+    await execAsync(`tmux -S "${socketPath}" send-keys -t "${target}" '${claudeCmd}' Enter`);
 
     // Get pane info
     const { stdout: paneInfo } = await execAsync(
-      `tmux list-panes -t "${target}" -F "#{pane_pid}" | head -1`
+      `tmux -S "${socketPath}" list-panes -t "${target}" -F "#{pane_pid}" | head -1`
     );
 
     const pane: TmuxPane = {
       session: tmuxSession,
-      window: parseInt(windowIndex.trim(), 10),
+      window: 0,
       pane: 0,
       pid: parseInt(paneInfo.trim(), 10),
       cwd: projectPath,
@@ -343,11 +434,154 @@ export async function spawnClaudeSession(
  */
 export async function sendToPane(pane: TmuxPane, command: string): Promise<boolean> {
   try {
+    const socketPath = getTmuxSocketPath();
     const target = `${pane.session}:${pane.window}.${pane.pane}`;
-    await execAsync(`tmux send-keys -t "${target}" '${command}' Enter`);
+    await execAsync(`tmux -S "${socketPath}" send-keys -t "${target}" '${command}' Enter`);
     return true;
   } catch (error) {
     console.error('[tmux Mapper] Failed to send to pane:', error);
+    return false;
+  }
+}
+
+// ============================================================
+// tmux Session Management
+// ============================================================
+
+export interface TmuxSessionInfo {
+  name: string;              // e.g., "csm", "ea-2"
+  windows: number;
+  panes: number;
+  created: string;           // ISO timestamp
+  attached: boolean;         // Currently attached?
+  lastActivity: string;      // ISO timestamp
+  size: string;              // e.g., "200x50"
+  claudeSessions: string[];  // Mapped Claude session IDs from DB
+}
+
+/**
+ * Get all tmux sessions with metadata and mapped Claude sessions
+ */
+export async function getTmuxSessions(): Promise<TmuxSessionInfo[]> {
+  try {
+    const socketPath = getTmuxSocketPath();
+
+    // List all tmux sessions with relevant fields
+    const { stdout } = await execAsync(
+      `tmux -S "${socketPath}" list-sessions -F "#{session_name}|#{session_windows}|#{session_attached}|#{session_created}|#{session_activity}|#{session_width}x#{session_height}"`
+    );
+
+    if (!stdout.trim()) return [];
+
+    const db = getDb();
+    const sessions: TmuxSessionInfo[] = [];
+
+    for (const line of stdout.trim().split('\n')) {
+      if (!line.trim()) continue;
+
+      const parts = line.split('|');
+      if (parts.length < 6) continue;
+
+      const [name, windowsStr, attachedStr, createdStr, activityStr, size] = parts;
+
+      // Get pane count for this session
+      let paneCount = 0;
+      try {
+        const { stdout: paneOutput } = await execAsync(
+          `tmux -S "${socketPath}" list-panes -t "${name}" -F "#{pane_id}" 2>/dev/null`
+        );
+        paneCount = paneOutput.trim().split('\n').filter(l => l.trim()).length;
+      } catch {
+        // Fallback: estimate one pane per window
+        paneCount = parseInt(windowsStr, 10) || 1;
+      }
+
+      // Convert unix timestamps to ISO strings
+      const createdEpoch = parseInt(createdStr, 10);
+      const activityEpoch = parseInt(activityStr, 10);
+      const created = isNaN(createdEpoch)
+        ? new Date().toISOString()
+        : new Date(createdEpoch * 1000).toISOString();
+      const lastActivity = isNaN(activityEpoch)
+        ? new Date().toISOString()
+        : new Date(activityEpoch * 1000).toISOString();
+
+      // Cross-reference with database to find Claude sessions mapped to this tmux session
+      const claudeSessions: string[] = [];
+      try {
+        const stmt = db.prepare(
+          'SELECT session_id FROM sessions WHERE tmux_session = ?'
+        );
+        const rows = stmt.all(name) as Array<{ session_id: string }>;
+        for (const row of rows) {
+          claudeSessions.push(row.session_id);
+        }
+      } catch (err) {
+        console.log(`[tmux Mapper] Failed to query Claude sessions for tmux session "${name}":`, err);
+      }
+
+      sessions.push({
+        name,
+        windows: parseInt(windowsStr, 10) || 0,
+        panes: paneCount,
+        created,
+        attached: attachedStr === '1',
+        lastActivity,
+        size: size || '0x0',
+        claudeSessions,
+      });
+    }
+
+    // Sort by lastActivity descending (most recent first)
+    sessions.sort((a, b) =>
+      new Date(b.lastActivity).getTime() - new Date(a.lastActivity).getTime()
+    );
+
+    return sessions;
+  } catch (error) {
+    // tmux server not running or other error → return empty array
+    console.log('[tmux Mapper] Failed to list tmux sessions:', error);
+    return [];
+  }
+}
+
+/**
+ * Kill a tmux session by name
+ */
+export async function killTmuxSession(sessionName: string): Promise<boolean> {
+  try {
+    const socketPath = getTmuxSocketPath();
+    await execAsync(`tmux -S "${socketPath}" kill-session -t "${sessionName}"`);
+    console.log(`[tmux Mapper] Killed tmux session: ${sessionName}`);
+    return true;
+  } catch (error) {
+    console.log(`[tmux Mapper] Failed to kill tmux session "${sessionName}":`, error);
+    return false;
+  }
+}
+
+/**
+ * Rename a tmux session and update all database references
+ */
+export async function renameTmuxSession(oldName: string, newName: string): Promise<boolean> {
+  try {
+    const socketPath = getTmuxSocketPath();
+    await execAsync(`tmux -S "${socketPath}" rename-session -t "${oldName}" "${newName}"`);
+    console.log(`[tmux Mapper] Renamed tmux session: ${oldName} → ${newName}`);
+
+    // Update database: all sessions referencing the old tmux session name
+    try {
+      const db = getDb();
+      const stmt = db.prepare('UPDATE sessions SET tmux_session = ? WHERE tmux_session = ?');
+      const result = stmt.run(newName, oldName);
+      console.log(`[tmux Mapper] Updated ${result.changes} database session(s) from "${oldName}" to "${newName}"`);
+    } catch (dbError) {
+      console.log(`[tmux Mapper] tmux rename succeeded but database update failed:`, dbError);
+    }
+
+    return true;
+  } catch (error) {
+    console.log(`[tmux Mapper] Failed to rename tmux session "${oldName}" to "${newName}":`, error);
     return false;
   }
 }

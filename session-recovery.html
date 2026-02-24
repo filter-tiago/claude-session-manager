@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session Recovery - Claude Session Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .session-card { transition: all 0.2s ease; }
+        .session-card:hover { transform: translateX(4px); }
+        .expand-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .expand-content.expanded { max-height: 3000px; }
+        pre { white-space: pre-wrap; word-wrap: break-word; }
+        .copy-btn { transition: all 0.2s; }
+        .copy-btn:hover { background-color: rgba(59, 130, 246, 0.3); }
+        .copy-btn.copied { background-color: rgba(34, 197, 94, 0.3); }
+        .cli-cmd { font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+    <div class="max-w-6xl mx-auto p-6">
+        <header class="mb-8">
+            <h1 class="text-3xl font-bold text-white mb-2">Session Recovery: Claude Session Manager</h1>
+            <p class="text-gray-400">Project: ~/workspace/claude-session-manager</p>
+            <p class="text-gray-500 text-sm mt-2">Generated: 2026-01-27 08:39</p>
+            <p class="text-green-400 text-sm mt-2">💡 Copy the CLI command and run it in your terminal to resume a session</p>
+        </header>
+
+        <div class="grid gap-4">
+
+            <div class="session-card bg-gray-800 rounded-lg border border-gray-700 overflow-hidden" id="session-0">
+                <div class="p-4 cursor-pointer hover:bg-gray-750" onclick="toggleSession(0)">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2 py-1 rounded text-xs font-medium bg-yellow-900 text-yellow-300">IN PROGRESS</span>
+                            <span class="font-mono text-sm text-gray-400">615742f9</span>
+                            <span class="text-xs text-gray-500">1617KB</span>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            Unknown - 
+                            
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white">Dashboard Performance Optimization</h3>
+                    <p class="text-sm text-gray-400 mt-1">Last: "fix it..."</p>
+                </div>
+                
+                <div class="expand-content border-t border-gray-700" id="expand-0">
+                    <div class="p-4 space-y-4">
+                        
+                        <!-- CLI Resume Command -->
+                        <div class="bg-green-900/30 border border-green-700 rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-sm font-semibold text-green-300">🖥️ Resume Command (Copy & Run in Terminal)</h4>
+                                <button onclick="copyCmd(0)" id="copy-btn-0" class="copy-btn px-3 py-1 bg-green-900/50 hover:bg-green-800 rounded text-xs text-green-300">
+                                    Copy
+                                </button>
+                            </div>
+                            <pre id="cmd-0" class="cli-cmd text-sm text-green-200 bg-gray-900 p-3 rounded select-all">cd ~/workspace/claude-session-manager && claude --resume 615742f9-1c1d-4db5-9947-267f4e900033 --dangerously-skip-permissions</pre>
+                        </div>
+                        
+                        <!-- Session ID -->
+                        <div class="text-xs text-gray-500">
+                            <span class="font-semibold">Full Session ID:</span> <code class="bg-gray-900 px-1 rounded">615742f9-1c1d-4db5-9947-267f4e900033</code>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">User Prompts</h4>
+                            <div class="space-y-2 max-h-48 overflow-y-auto">
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">12:56</span>
+                                    <span class="text-gray-300 ml-2">Implement the following plan:
+
+# Dashboard Performance Optimization Plan
+
+## Problem Statement
+
+The session dashboard loads ALL sessions at once with no pagination, causing:
+- Large IPC payloads (24 f...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">00:18</span>
+                                    <span class="text-gray-300 ml-2">Review in sub agents for bugs...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">00:23</span>
+                                    <span class="text-gray-300 ml-2">fix it...</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">Tools Used</h4>
+                            <div class="flex flex-wrap gap-2">
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Edit (24)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Read (16)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Bash (4)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Task (4)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Grep (3)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Write (2)</span>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="session-card bg-gray-800 rounded-lg border border-gray-700 overflow-hidden" id="session-1">
+                <div class="p-4 cursor-pointer hover:bg-gray-750" onclick="toggleSession(1)">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2 py-1 rounded text-xs font-medium bg-yellow-900 text-yellow-300">IN PROGRESS</span>
+                            <span class="font-mono text-sm text-gray-400">03187399</span>
+                            <span class="text-xs text-gray-500">1324KB</span>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            Unknown - 
+                            
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white">Sprint 5.4: AI Insights</h3>
+                    <p class="text-sm text-gray-400 mt-1">Cross-session intelligence</p>
+                </div>
+                
+                <div class="expand-content border-t border-gray-700" id="expand-1">
+                    <div class="p-4 space-y-4">
+                        
+                        <!-- CLI Resume Command -->
+                        <div class="bg-green-900/30 border border-green-700 rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-sm font-semibold text-green-300">🖥️ Resume Command (Copy & Run in Terminal)</h4>
+                                <button onclick="copyCmd(1)" id="copy-btn-1" class="copy-btn px-3 py-1 bg-green-900/50 hover:bg-green-800 rounded text-xs text-green-300">
+                                    Copy
+                                </button>
+                            </div>
+                            <pre id="cmd-1" class="cli-cmd text-sm text-green-200 bg-gray-900 p-3 rounded select-all">cd ~/workspace/claude-session-manager && claude --resume 03187399-e67e-49e8-a0a1-9b2c6047a0e8 --dangerously-skip-permissions</pre>
+                        </div>
+                        
+                        <!-- Session ID -->
+                        <div class="text-xs text-gray-500">
+                            <span class="font-semibold">Full Session ID:</span> <code class="bg-gray-900 px-1 rounded">03187399-e67e-49e8-a0a1-9b2c6047a0e8</code>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">User Prompts</h4>
+                            <div class="space-y-2 max-h-48 overflow-y-auto">
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">23:23</span>
+                                    <span class="text-gray-300 ml-2">Implement the following plan:
+
+# Sprint 5.4: AI Insights
+
+## Summary
+Add cross-session intelligence to the Command Center. Analyze patterns across session history to detect corrections, mine workflows...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">23:29</span>
+                                    <span class="text-gray-300 ml-2">continue...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">23:43</span>
+                                    <span class="text-gray-300 ml-2">whats next? ...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">00:17</span>
+                                    <span class="text-gray-300 ml-2">open the app...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">00:18</span>
+                                    <span class="text-gray-300 ml-2">just a generic electron app default...</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">Tools Used</h4>
+                            <div class="flex flex-wrap gap-2">
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Edit (15)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Bash (13)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Read (11)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Write (4)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">AskUserQuestion (2)</span>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="session-card bg-gray-800 rounded-lg border border-gray-700 overflow-hidden" id="session-2">
+                <div class="p-4 cursor-pointer hover:bg-gray-750" onclick="toggleSession(2)">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2 py-1 rounded text-xs font-medium bg-green-900 text-green-300">COMPLETE</span>
+                            <span class="font-mono text-sm text-gray-400">b00fd085</span>
+                            <span class="text-xs text-gray-500">1772KB</span>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            Unknown - 
+                            
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white">Life on Claude Nine - UX Enhancement</h3>
+                    <p class="text-sm text-gray-400 mt-1">10 major UX enhancements</p>
+                </div>
+                
+                <div class="expand-content border-t border-gray-700" id="expand-2">
+                    <div class="p-4 space-y-4">
+                        
+                        <!-- CLI Resume Command -->
+                        <div class="bg-green-900/30 border border-green-700 rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-sm font-semibold text-green-300">🖥️ Resume Command (Copy & Run in Terminal)</h4>
+                                <button onclick="copyCmd(2)" id="copy-btn-2" class="copy-btn px-3 py-1 bg-green-900/50 hover:bg-green-800 rounded text-xs text-green-300">
+                                    Copy
+                                </button>
+                            </div>
+                            <pre id="cmd-2" class="cli-cmd text-sm text-green-200 bg-gray-900 p-3 rounded select-all">cd ~/workspace/claude-session-manager && claude --resume b00fd085-e7de-45d9-b11d-f859a5173a9b --dangerously-skip-permissions</pre>
+                        </div>
+                        
+                        <!-- Session ID -->
+                        <div class="text-xs text-gray-500">
+                            <span class="font-semibold">Full Session ID:</span> <code class="bg-gray-900 px-1 rounded">b00fd085-e7de-45d9-b11d-f859a5173a9b</code>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">User Prompts</h4>
+                            <div class="space-y-2 max-h-48 overflow-y-auto">
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">12:47</span>
+                                    <span class="text-gray-300 ml-2">Implement the following plan:
+
+# Life on Claude Nine - Ultimate UX Enhancement Plan
+
+## Overview
+Implement all 10 major UX enhancements to transform the story presentation into an unforgettable psycho...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">12:54</span>
+                                    <span class="text-gray-300 ml-2">navigation needs imrpovement, keyboard oes not work and dots navigation is fixed not absolute I guess review ...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">12:58</span>
+                                    <span class="text-gray-300 ml-2">No its even more messy, review...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">12:58</span>
+                                    <span class="text-gray-300 ml-2">use normal arrow keys ...</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">Tools Used</h4>
+                            <div class="flex flex-wrap gap-2">
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Edit (14)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">TaskUpdate (11)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">TaskCreate (10)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Read (8)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Grep (7)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Bash (5)</span>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="session-card bg-gray-800 rounded-lg border border-gray-700 overflow-hidden" id="session-3">
+                <div class="p-4 cursor-pointer hover:bg-gray-750" onclick="toggleSession(3)">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2 py-1 rounded text-xs font-medium bg-blue-900 text-blue-300">PLAN</span>
+                            <span class="font-mono text-sm text-gray-400">ea450102</span>
+                            <span class="text-xs text-gray-500">314KB</span>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            Unknown - 
+                            
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white">Dashboard Performance Interview</h3>
+                    <p class="text-sm text-gray-400 mt-1">Planning alternatives</p>
+                </div>
+                
+                <div class="expand-content border-t border-gray-700" id="expand-3">
+                    <div class="p-4 space-y-4">
+                        
+                        <!-- CLI Resume Command -->
+                        <div class="bg-green-900/30 border border-green-700 rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-sm font-semibold text-green-300">🖥️ Resume Command (Copy & Run in Terminal)</h4>
+                                <button onclick="copyCmd(3)" id="copy-btn-3" class="copy-btn px-3 py-1 bg-green-900/50 hover:bg-green-800 rounded text-xs text-green-300">
+                                    Copy
+                                </button>
+                            </div>
+                            <pre id="cmd-3" class="cli-cmd text-sm text-green-200 bg-gray-900 p-3 rounded select-all">cd ~/workspace/claude-session-manager && claude --resume ea450102-f31e-4085-bf4f-ed1a60eab553 --dangerously-skip-permissions</pre>
+                        </div>
+                        
+                        <!-- Session ID -->
+                        <div class="text-xs text-gray-500">
+                            <span class="font-semibold">Full Session ID:</span> <code class="bg-gray-900 px-1 rounded">ea450102-f31e-4085-bf4f-ed1a60eab553</code>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">User Prompts</h4>
+                            <div class="space-y-2 max-h-48 overflow-y-auto">
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">08:07</span>
+                                    <span class="text-gray-300 ml-2">We need to improve the main dashboard perfomance, since it loads tons of sessions its slow what we can do Interview me with some alternatives. Let's go super deep and understand the trade-offs. I don'...</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">Tools Used</h4>
+                            <div class="flex flex-wrap gap-2">
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">AskUserQuestion (4)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Task (1)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Write (1)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Edit (1)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">ExitPlanMode (1)</span>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="session-card bg-gray-800 rounded-lg border border-gray-700 overflow-hidden" id="session-4">
+                <div class="p-4 cursor-pointer hover:bg-gray-750" onclick="toggleSession(4)">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2 py-1 rounded text-xs font-medium bg-green-900 text-green-300">COMPLETE</span>
+                            <span class="font-mono text-sm text-gray-400">f0d42a5d</span>
+                            <span class="text-xs text-gray-500">416KB</span>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            Unknown - 
+                            
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white">HTML History Presentation</h3>
+                    <p class="text-sm text-gray-400 mt-1">Visual presentation</p>
+                </div>
+                
+                <div class="expand-content border-t border-gray-700" id="expand-4">
+                    <div class="p-4 space-y-4">
+                        
+                        <!-- CLI Resume Command -->
+                        <div class="bg-green-900/30 border border-green-700 rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-sm font-semibold text-green-300">🖥️ Resume Command (Copy & Run in Terminal)</h4>
+                                <button onclick="copyCmd(4)" id="copy-btn-4" class="copy-btn px-3 py-1 bg-green-900/50 hover:bg-green-800 rounded text-xs text-green-300">
+                                    Copy
+                                </button>
+                            </div>
+                            <pre id="cmd-4" class="cli-cmd text-sm text-green-200 bg-gray-900 p-3 rounded select-all">cd ~/workspace/claude-session-manager && claude --resume f0d42a5d-113c-4a02-820e-d7938b120362 --dangerously-skip-permissions</pre>
+                        </div>
+                        
+                        <!-- Session ID -->
+                        <div class="text-xs text-gray-500">
+                            <span class="font-semibold">Full Session ID:</span> <code class="bg-gray-900 px-1 rounded">f0d42a5d-113c-4a02-820e-d7938b120362</code>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">User Prompts</h4>
+                            <div class="space-y-2 max-h-48 overflow-y-auto">
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">12:25</span>
+                                    <span class="text-gray-300 ml-2">create a html presentaiton for this text super fun and easy to see I like visuals and I want to understand all the history go nuts use fronten skill, impress me with the level of things done in this!
+...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">12:29</span>
+                                    <span class="text-gray-300 ml-2">deploy it in verrcel and give me the link...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">12:33</span>
+                                    <span class="text-gray-300 ml-2">make it public so anyone can access it...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">12:37</span>
+                                    <span class="text-gray-300 ml-2">Continue improving this UX, its already amazing lets continue working on it, first tell me your next ideia to improve this story UX... go nuts!...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">12:46</span>
+                                    <span class="text-gray-300 ml-2">Full!...</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">Tools Used</h4>
+                            <div class="flex flex-wrap gap-2">
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Bash (9)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Write (2)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Skill (1)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Read (1)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">ExitPlanMode (1)</span>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="session-card bg-gray-800 rounded-lg border border-gray-700 overflow-hidden" id="session-5">
+                <div class="p-4 cursor-pointer hover:bg-gray-750" onclick="toggleSession(5)">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2 py-1 rounded text-xs font-medium bg-yellow-900 text-yellow-300">IN PROGRESS</span>
+                            <span class="font-mono text-sm text-gray-400">fe1227d3</span>
+                            <span class="text-xs text-gray-500">821KB</span>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            Unknown - 
+                            
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white">Open Session in Tmux</h3>
+                    <p class="text-sm text-gray-400 mt-1">Active/stopped session handling</p>
+                </div>
+                
+                <div class="expand-content border-t border-gray-700" id="expand-5">
+                    <div class="p-4 space-y-4">
+                        
+                        <!-- CLI Resume Command -->
+                        <div class="bg-green-900/30 border border-green-700 rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-sm font-semibold text-green-300">🖥️ Resume Command (Copy & Run in Terminal)</h4>
+                                <button onclick="copyCmd(5)" id="copy-btn-5" class="copy-btn px-3 py-1 bg-green-900/50 hover:bg-green-800 rounded text-xs text-green-300">
+                                    Copy
+                                </button>
+                            </div>
+                            <pre id="cmd-5" class="cli-cmd text-sm text-green-200 bg-gray-900 p-3 rounded select-all">cd ~/workspace/claude-session-manager && claude --resume fe1227d3-c991-4167-b235-5650b4a53385 --dangerously-skip-permissions</pre>
+                        </div>
+                        
+                        <!-- Session ID -->
+                        <div class="text-xs text-gray-500">
+                            <span class="font-semibold">Full Session ID:</span> <code class="bg-gray-900 px-1 rounded">fe1227d3-c991-4167-b235-5650b4a53385</code>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">User Prompts</h4>
+                            <div class="space-y-2 max-h-48 overflow-y-auto">
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">08:06</span>
+                                    <span class="text-gray-300 ml-2">Implement the following plan:
+
+# Plan: Open Session in Tmux
+
+## Goal
+Add "Open in Terminal" action that smartly handles session state:
+- **Active sessions** (valid tmux mapping) → attach to existing p...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">12:24</span>
+                                    <span class="text-gray-300 ml-2">/clear ...</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">Tools Used</h4>
+                            <div class="flex flex-wrap gap-2">
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Edit (19)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">TaskUpdate (12)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Read (10)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">TaskCreate (6)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Grep (4)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Bash (2)</span>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="session-card bg-gray-800 rounded-lg border border-gray-700 overflow-hidden" id="session-6">
+                <div class="p-4 cursor-pointer hover:bg-gray-750" onclick="toggleSession(6)">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2 py-1 rounded text-xs font-medium bg-gray-700 text-gray-300">UNKNOWN</span>
+                            <span class="font-mono text-sm text-gray-400">5f8963e2</span>
+                            <span class="text-xs text-gray-500">2KB</span>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            Unknown - 
+                            
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white">Claude Code Conversation Clear</h3>
+                    
+                </div>
+                
+                <div class="expand-content border-t border-gray-700" id="expand-6">
+                    <div class="p-4 space-y-4">
+                        
+                        <!-- CLI Resume Command -->
+                        <div class="bg-green-900/30 border border-green-700 rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-sm font-semibold text-green-300">🖥️ Resume Command (Copy & Run in Terminal)</h4>
+                                <button onclick="copyCmd(6)" id="copy-btn-6" class="copy-btn px-3 py-1 bg-green-900/50 hover:bg-green-800 rounded text-xs text-green-300">
+                                    Copy
+                                </button>
+                            </div>
+                            <pre id="cmd-6" class="cli-cmd text-sm text-green-200 bg-gray-900 p-3 rounded select-all">cd ~/workspace/claude-session-manager && claude --resume 5f8963e2-1579-44b9-b4a8-6f3a36bbaca4 --dangerously-skip-permissions</pre>
+                        </div>
+                        
+                        <!-- Session ID -->
+                        <div class="text-xs text-gray-500">
+                            <span class="font-semibold">Full Session ID:</span> <code class="bg-gray-900 px-1 rounded">5f8963e2-1579-44b9-b4a8-6f3a36bbaca4</code>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="session-card bg-gray-800 rounded-lg border border-gray-700 overflow-hidden" id="session-7">
+                <div class="p-4 cursor-pointer hover:bg-gray-750" onclick="toggleSession(7)">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2 py-1 rounded text-xs font-medium bg-yellow-900 text-yellow-300">IN PROGRESS</span>
+                            <span class="font-mono text-sm text-gray-400">78c10e15</span>
+                            <span class="text-xs text-gray-500">47KB</span>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            Unknown - 
+                            
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white">Sprint 5.4: AI Insights</h3>
+                    <p class="text-sm text-gray-400 mt-1">Cross-session patterns</p>
+                </div>
+                
+                <div class="expand-content border-t border-gray-700" id="expand-7">
+                    <div class="p-4 space-y-4">
+                        
+                        <!-- CLI Resume Command -->
+                        <div class="bg-green-900/30 border border-green-700 rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-sm font-semibold text-green-300">🖥️ Resume Command (Copy & Run in Terminal)</h4>
+                                <button onclick="copyCmd(7)" id="copy-btn-7" class="copy-btn px-3 py-1 bg-green-900/50 hover:bg-green-800 rounded text-xs text-green-300">
+                                    Copy
+                                </button>
+                            </div>
+                            <pre id="cmd-7" class="cli-cmd text-sm text-green-200 bg-gray-900 p-3 rounded select-all">cd ~/workspace/claude-session-manager && claude --resume 78c10e15-0a53-464f-b2fa-858c55b1172d --dangerously-skip-permissions</pre>
+                        </div>
+                        
+                        <!-- Session ID -->
+                        <div class="text-xs text-gray-500">
+                            <span class="font-semibold">Full Session ID:</span> <code class="bg-gray-900 px-1 rounded">78c10e15-0a53-464f-b2fa-858c55b1172d</code>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">User Prompts</h4>
+                            <div class="space-y-2 max-h-48 overflow-y-auto">
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">22:06</span>
+                                    <span class="text-gray-300 ml-2">Implement the following plan:
+
+# Sprint 5.4: AI Insights
+
+## Summary
+Add cross-session intelligence to the Command Center. Analyze patterns across session history to detect corrections, mine workflows...</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">Tools Used</h4>
+                            <div class="flex flex-wrap gap-2">
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Read (2)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">ExitPlanMode (1)</span>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="session-card bg-gray-800 rounded-lg border border-gray-700 overflow-hidden" id="session-8">
+                <div class="p-4 cursor-pointer hover:bg-gray-750" onclick="toggleSession(8)">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2 py-1 rounded text-xs font-medium bg-yellow-900 text-yellow-300">IN PROGRESS</span>
+                            <span class="font-mono text-sm text-gray-400">787a46a6</span>
+                            <span class="text-xs text-gray-500">190KB</span>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            Unknown - 
+                            
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white">Open App Session</h3>
+                    <p class="text-sm text-gray-400 mt-1">7 prompts</p>
+                </div>
+                
+                <div class="expand-content border-t border-gray-700" id="expand-8">
+                    <div class="p-4 space-y-4">
+                        
+                        <!-- CLI Resume Command -->
+                        <div class="bg-green-900/30 border border-green-700 rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-sm font-semibold text-green-300">🖥️ Resume Command (Copy & Run in Terminal)</h4>
+                                <button onclick="copyCmd(8)" id="copy-btn-8" class="copy-btn px-3 py-1 bg-green-900/50 hover:bg-green-800 rounded text-xs text-green-300">
+                                    Copy
+                                </button>
+                            </div>
+                            <pre id="cmd-8" class="cli-cmd text-sm text-green-200 bg-gray-900 p-3 rounded select-all">cd ~/workspace/claude-session-manager && claude --resume 787a46a6-bb49-496b-8ed5-1df57ea1ea48 --dangerously-skip-permissions</pre>
+                        </div>
+                        
+                        <!-- Session ID -->
+                        <div class="text-xs text-gray-500">
+                            <span class="font-semibold">Full Session ID:</span> <code class="bg-gray-900 px-1 rounded">787a46a6-bb49-496b-8ed5-1df57ea1ea48</code>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">User Prompts</h4>
+                            <div class="space-y-2 max-h-48 overflow-y-auto">
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">23:21</span>
+                                    <span class="text-gray-300 ml-2">opn the app...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">23:21</span>
+                                    <span class="text-gray-300 ml-2">/rate-limit-options...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">23:21</span>
+                                    <span class="text-gray-300 ml-2">/login ...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">23:22</span>
+                                    <span class="text-gray-300 ml-2">opn the app...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">23:22</span>
+                                    <span class="text-gray-300 ml-2">review logs...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">23:23</span>
+                                    <span class="text-gray-300 ml-2">I see nothing in the screen...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">23:29</span>
+                                    <span class="text-gray-300 ml-2">/clear ...</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">Tools Used</h4>
+                            <div class="flex flex-wrap gap-2">
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Bash (18)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">AskUserQuestion (2)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Grep (1)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Read (1)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">KillShell (1)</span>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="session-card bg-gray-800 rounded-lg border border-gray-700 overflow-hidden" id="session-9">
+                <div class="p-4 cursor-pointer hover:bg-gray-750" onclick="toggleSession(9)">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2 py-1 rounded text-xs font-medium bg-yellow-900 text-yellow-300">IN PROGRESS</span>
+                            <span class="font-mono text-sm text-gray-400">4ebdca21</span>
+                            <span class="text-xs text-gray-500">380KB</span>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            Unknown - 
+                            
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white">Session Detail UI/UX</h3>
+                    <p class="text-sm text-gray-400 mt-1">Conversation improvements</p>
+                </div>
+                
+                <div class="expand-content border-t border-gray-700" id="expand-9">
+                    <div class="p-4 space-y-4">
+                        
+                        <!-- CLI Resume Command -->
+                        <div class="bg-green-900/30 border border-green-700 rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-sm font-semibold text-green-300">🖥️ Resume Command (Copy & Run in Terminal)</h4>
+                                <button onclick="copyCmd(9)" id="copy-btn-9" class="copy-btn px-3 py-1 bg-green-900/50 hover:bg-green-800 rounded text-xs text-green-300">
+                                    Copy
+                                </button>
+                            </div>
+                            <pre id="cmd-9" class="cli-cmd text-sm text-green-200 bg-gray-900 p-3 rounded select-all">cd ~/workspace/claude-session-manager && claude --resume 4ebdca21-6dd2-407f-9081-e3605d782e3c --dangerously-skip-permissions</pre>
+                        </div>
+                        
+                        <!-- Session ID -->
+                        <div class="text-xs text-gray-500">
+                            <span class="font-semibold">Full Session ID:</span> <code class="bg-gray-900 px-1 rounded">4ebdca21-6dd2-407f-9081-e3605d782e3c</code>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">User Prompts</h4>
+                            <div class="space-y-2 max-h-48 overflow-y-auto">
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">21:12</span>
+                                    <span class="text-gray-300 ml-2">in current ledger plan does it inprove the UI UX in the session detail? I see this where the conveersation has all thios nice looking info file:///Users/partiu/workspace/filterbuy-2/executive-assistan...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">21:12</span>
+                                    <span class="text-gray-300 ml-2">/rate-limit-options...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">21:12</span>
+                                    <span class="text-gray-300 ml-2">/login ...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">21:13</span>
+                                    <span class="text-gray-300 ml-2">continue...</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">Tools Used</h4>
+                            <div class="flex flex-wrap gap-2">
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Read (5)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">AskUserQuestion (1)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Task (1)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Write (1)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">ExitPlanMode (1)</span>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="session-card bg-gray-800 rounded-lg border border-gray-700 overflow-hidden" id="session-10">
+                <div class="p-4 cursor-pointer hover:bg-gray-750" onclick="toggleSession(10)">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2 py-1 rounded text-xs font-medium bg-green-900 text-green-300">COMPLETE</span>
+                            <span class="font-mono text-sm text-gray-400">18c6a90d</span>
+                            <span class="text-xs text-gray-500">874KB</span>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            Unknown - 
+                            
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white">Sprint 5.3: MCP + Plugins Management</h3>
+                    <p class="text-sm text-gray-400 mt-1">Command Center plugins</p>
+                </div>
+                
+                <div class="expand-content border-t border-gray-700" id="expand-10">
+                    <div class="p-4 space-y-4">
+                        
+                        <!-- CLI Resume Command -->
+                        <div class="bg-green-900/30 border border-green-700 rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-sm font-semibold text-green-300">🖥️ Resume Command (Copy & Run in Terminal)</h4>
+                                <button onclick="copyCmd(10)" id="copy-btn-10" class="copy-btn px-3 py-1 bg-green-900/50 hover:bg-green-800 rounded text-xs text-green-300">
+                                    Copy
+                                </button>
+                            </div>
+                            <pre id="cmd-10" class="cli-cmd text-sm text-green-200 bg-gray-900 p-3 rounded select-all">cd ~/workspace/claude-session-manager && claude --resume 18c6a90d-df72-4bc2-8f44-4fc9af11ea13 --dangerously-skip-permissions</pre>
+                        </div>
+                        
+                        <!-- Session ID -->
+                        <div class="text-xs text-gray-500">
+                            <span class="font-semibold">Full Session ID:</span> <code class="bg-gray-900 px-1 rounded">18c6a90d-df72-4bc2-8f44-4fc9af11ea13</code>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">User Prompts</h4>
+                            <div class="space-y-2 max-h-48 overflow-y-auto">
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">21:10</span>
+                                    <span class="text-gray-300 ml-2">Implement the following plan:
+
+# Sprint 5.3: MCP + Plugins Management
+
+## Summary
+Add MCP server management and plugins overview to the Command Center. Users can view, test, enable/disable MCP servers...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">21:25</span>
+                                    <span class="text-gray-300 ml-2">what else? ...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">21:29</span>
+                                    <span class="text-gray-300 ml-2">whats next? ...</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">Tools Used</h4>
+                            <div class="flex flex-wrap gap-2">
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Edit (10)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Read (9)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Write (4)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Bash (2)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Glob (1)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">AskUserQuestion (1)</span>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="session-card bg-gray-800 rounded-lg border border-gray-700 overflow-hidden" id="session-11">
+                <div class="p-4 cursor-pointer hover:bg-gray-750" onclick="toggleSession(11)">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2 py-1 rounded text-xs font-medium bg-red-900 text-red-300">BUG FIX</span>
+                            <span class="font-mono text-sm text-gray-400">461d488f</span>
+                            <span class="text-xs text-gray-500">438KB</span>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            Unknown - 
+                            
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white">Embedded Terminal Bug</h3>
+                    <p class="text-sm text-gray-400 mt-1">Cannot interact with terminal</p>
+                </div>
+                
+                <div class="expand-content border-t border-gray-700" id="expand-11">
+                    <div class="p-4 space-y-4">
+                        
+                        <!-- CLI Resume Command -->
+                        <div class="bg-green-900/30 border border-green-700 rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-sm font-semibold text-green-300">🖥️ Resume Command (Copy & Run in Terminal)</h4>
+                                <button onclick="copyCmd(11)" id="copy-btn-11" class="copy-btn px-3 py-1 bg-green-900/50 hover:bg-green-800 rounded text-xs text-green-300">
+                                    Copy
+                                </button>
+                            </div>
+                            <pre id="cmd-11" class="cli-cmd text-sm text-green-200 bg-gray-900 p-3 rounded select-all">cd ~/workspace/claude-session-manager && claude --resume 461d488f-bb83-405c-823e-d5b6363a9518 --dangerously-skip-permissions</pre>
+                        </div>
+                        
+                        <!-- Session ID -->
+                        <div class="text-xs text-gray-500">
+                            <span class="font-semibold">Full Session ID:</span> <code class="bg-gray-900 px-1 rounded">461d488f-bb83-405c-823e-d5b6363a9518</code>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">User Prompts</h4>
+                            <div class="space-y-2 max-h-48 overflow-y-auto">
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">23:30</span>
+                                    <span class="text-gray-300 ml-2">Implement the following plan:
+
+# Plan: Embedded Terminal for Session Detail View
+
+## Status: IMPLEMENTED
+
+The embedded terminal feature has been implemented and is working.
+
+## Goal
+
+Replace the parse...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">23:33</span>
+                                    <span class="text-gray-300 ml-2">when I open a session now I see terminal but I cannot interact seems empty...</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">Tools Used</h4>
+                            <div class="flex flex-wrap gap-2">
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Grep (8)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Read (4)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Glob (2)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Bash (1)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Task (1)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Write (1)</span>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="session-card bg-gray-800 rounded-lg border border-gray-700 overflow-hidden" id="session-12">
+                <div class="p-4 cursor-pointer hover:bg-gray-750" onclick="toggleSession(12)">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2 py-1 rounded text-xs font-medium bg-green-900 text-green-300">IMPLEMENTED</span>
+                            <span class="font-mono text-sm text-gray-400">31449af9</span>
+                            <span class="text-xs text-gray-500">1235KB</span>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            Unknown - 
+                            
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white">Embedded Terminal for Session Detail</h3>
+                    <p class="text-sm text-gray-400 mt-1">Replace JSONL with terminal</p>
+                </div>
+                
+                <div class="expand-content border-t border-gray-700" id="expand-12">
+                    <div class="p-4 space-y-4">
+                        
+                        <!-- CLI Resume Command -->
+                        <div class="bg-green-900/30 border border-green-700 rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-sm font-semibold text-green-300">🖥️ Resume Command (Copy & Run in Terminal)</h4>
+                                <button onclick="copyCmd(12)" id="copy-btn-12" class="copy-btn px-3 py-1 bg-green-900/50 hover:bg-green-800 rounded text-xs text-green-300">
+                                    Copy
+                                </button>
+                            </div>
+                            <pre id="cmd-12" class="cli-cmd text-sm text-green-200 bg-gray-900 p-3 rounded select-all">cd ~/workspace/claude-session-manager && claude --resume 31449af9-d591-4006-a82f-595f2e4e3475 --dangerously-skip-permissions</pre>
+                        </div>
+                        
+                        <!-- Session ID -->
+                        <div class="text-xs text-gray-500">
+                            <span class="font-semibold">Full Session ID:</span> <code class="bg-gray-900 px-1 rounded">31449af9-d591-4006-a82f-595f2e4e3475</code>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">User Prompts</h4>
+                            <div class="space-y-2 max-h-48 overflow-y-auto">
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">21:25</span>
+                                    <span class="text-gray-300 ml-2">Implement the following plan:
+
+# Plan: Embedded Terminal for Session Detail View
+
+## Goal
+
+Replace the parsed JSONL conversation view with an embedded tmux terminal using xterm.js. This provides:
+- Re...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">22:07</span>
+                                    <span class="text-gray-300 ml-2">I see nothing there...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">23:24</span>
+                                    <span class="text-gray-300 ml-2">I think you broke the app investigate...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">23:30</span>
+                                    <span class="text-gray-300 ml-2">Implement...</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">Tools Used</h4>
+                            <div class="flex flex-wrap gap-2">
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Edit (22)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Bash (19)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Read (10)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Write (2)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">TaskOutput (2)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">ExitPlanMode (2)</span>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="session-card bg-gray-800 rounded-lg border border-gray-700 overflow-hidden" id="session-13">
+                <div class="p-4 cursor-pointer hover:bg-gray-750" onclick="toggleSession(13)">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2 py-1 rounded text-xs font-medium bg-red-900 text-red-300">BUG FIX</span>
+                            <span class="font-mono text-sm text-gray-400">6d6ae3e4</span>
+                            <span class="text-xs text-gray-500">188KB</span>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            Unknown - 
+                            
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white">Fix Empty Terminal Issue</h3>
+                    <p class="text-sm text-gray-400 mt-1">Terminal view empty</p>
+                </div>
+                
+                <div class="expand-content border-t border-gray-700" id="expand-13">
+                    <div class="p-4 space-y-4">
+                        
+                        <!-- CLI Resume Command -->
+                        <div class="bg-green-900/30 border border-green-700 rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-sm font-semibold text-green-300">🖥️ Resume Command (Copy & Run in Terminal)</h4>
+                                <button onclick="copyCmd(13)" id="copy-btn-13" class="copy-btn px-3 py-1 bg-green-900/50 hover:bg-green-800 rounded text-xs text-green-300">
+                                    Copy
+                                </button>
+                            </div>
+                            <pre id="cmd-13" class="cli-cmd text-sm text-green-200 bg-gray-900 p-3 rounded select-all">cd ~/workspace/claude-session-manager && claude --resume 6d6ae3e4-1eef-4caf-a85f-b47edd7f03c8 --dangerously-skip-permissions</pre>
+                        </div>
+                        
+                        <!-- Session ID -->
+                        <div class="text-xs text-gray-500">
+                            <span class="font-semibold">Full Session ID:</span> <code class="bg-gray-900 px-1 rounded">6d6ae3e4-1eef-4caf-a85f-b47edd7f03c8</code>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">User Prompts</h4>
+                            <div class="space-y-2 max-h-48 overflow-y-auto">
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">23:40</span>
+                                    <span class="text-gray-300 ml-2">Implement the following plan:
+
+# Plan: Fix Empty Terminal Issue
+
+## Problem
+
+When opening a session, the terminal view appears empty and non-interactive.
+
+## Root Cause Analysis
+
+**Primary Issue: Race...</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">Tools Used</h4>
+                            <div class="flex flex-wrap gap-2">
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Edit (5)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Read (3)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Bash (3)</span>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="session-card bg-gray-800 rounded-lg border border-gray-700 overflow-hidden" id="session-14">
+                <div class="p-4 cursor-pointer hover:bg-gray-750" onclick="toggleSession(14)">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2 py-1 rounded text-xs font-medium bg-yellow-900 text-yellow-300">IN PROGRESS</span>
+                            <span class="font-mono text-sm text-gray-400">8dbe4b4b</span>
+                            <span class="text-xs text-gray-500">413KB</span>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            Unknown - 
+                            
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white">Tmux Session UI</h3>
+                    <p class="text-sm text-gray-400 mt-1">Open session in tmux</p>
+                </div>
+                
+                <div class="expand-content border-t border-gray-700" id="expand-14">
+                    <div class="p-4 space-y-4">
+                        
+                        <!-- CLI Resume Command -->
+                        <div class="bg-green-900/30 border border-green-700 rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-sm font-semibold text-green-300">🖥️ Resume Command (Copy & Run in Terminal)</h4>
+                                <button onclick="copyCmd(14)" id="copy-btn-14" class="copy-btn px-3 py-1 bg-green-900/50 hover:bg-green-800 rounded text-xs text-green-300">
+                                    Copy
+                                </button>
+                            </div>
+                            <pre id="cmd-14" class="cli-cmd text-sm text-green-200 bg-gray-900 p-3 rounded select-all">cd ~/workspace/claude-session-manager && claude --resume 8dbe4b4b-fd0e-4171-b93c-ef8728509046 --dangerously-skip-permissions</pre>
+                        </div>
+                        
+                        <!-- Session ID -->
+                        <div class="text-xs text-gray-500">
+                            <span class="font-semibold">Full Session ID:</span> <code class="bg-gray-900 px-1 rounded">8dbe4b4b-fd0e-4171-b93c-ef8728509046</code>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">User Prompts</h4>
+                            <div class="space-y-2 max-h-48 overflow-y-auto">
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">23:31</span>
+                                    <span class="text-gray-300 ml-2">where is the tmux sessions in the UI? ...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">23:42</span>
+                                    <span class="text-gray-300 ml-2">I want a way to see a session and open it in a tmux session, finding some good logic to that ...</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">Tools Used</h4>
+                            <div class="flex flex-wrap gap-2">
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Task (2)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">AskUserQuestion (2)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Write (1)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Edit (1)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">ExitPlanMode (1)</span>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="session-card bg-gray-800 rounded-lg border border-gray-700 overflow-hidden" id="session-15">
+                <div class="p-4 cursor-pointer hover:bg-gray-750" onclick="toggleSession(15)">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2 py-1 rounded text-xs font-medium bg-gray-700 text-gray-300">UNKNOWN</span>
+                            <span class="font-mono text-sm text-gray-400">34b89b22</span>
+                            <span class="text-xs text-gray-500">658KB</span>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            Unknown - 
+                            
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white">You're out of extra usage · resets 12am (America/Sao_Paulo)</h3>
+                    
+                </div>
+                
+                <div class="expand-content border-t border-gray-700" id="expand-15">
+                    <div class="p-4 space-y-4">
+                        
+                        <!-- CLI Resume Command -->
+                        <div class="bg-green-900/30 border border-green-700 rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-sm font-semibold text-green-300">🖥️ Resume Command (Copy & Run in Terminal)</h4>
+                                <button onclick="copyCmd(15)" id="copy-btn-15" class="copy-btn px-3 py-1 bg-green-900/50 hover:bg-green-800 rounded text-xs text-green-300">
+                                    Copy
+                                </button>
+                            </div>
+                            <pre id="cmd-15" class="cli-cmd text-sm text-green-200 bg-gray-900 p-3 rounded select-all">cd ~/workspace/claude-session-manager && claude --resume 34b89b22-70fc-4089-95bd-3250e615d40b --dangerously-skip-permissions</pre>
+                        </div>
+                        
+                        <!-- Session ID -->
+                        <div class="text-xs text-gray-500">
+                            <span class="font-semibold">Full Session ID:</span> <code class="bg-gray-900 px-1 rounded">34b89b22-70fc-4089-95bd-3250e615d40b</code>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">User Prompts</h4>
+                            <div class="space-y-2 max-h-48 overflow-y-auto">
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">19:45</span>
+                                    <span class="text-gray-300 ml-2">load ledger about app lets continue...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">20:00</span>
+                                    <span class="text-gray-300 ml-2">/login ...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">20:01</span>
+                                    <span class="text-gray-300 ml-2">continue...</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">Tools Used</h4>
+                            <div class="flex flex-wrap gap-2">
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Task (3)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Read (3)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">ExitPlanMode (2)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">AskUserQuestion (1)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Write (1)</span>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="session-card bg-gray-800 rounded-lg border border-gray-700 overflow-hidden" id="session-16">
+                <div class="p-4 cursor-pointer hover:bg-gray-750" onclick="toggleSession(16)">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2 py-1 rounded text-xs font-medium bg-gray-700 text-gray-300">UNKNOWN</span>
+                            <span class="font-mono text-sm text-gray-400">5d311b57</span>
+                            <span class="text-xs text-gray-500">545KB</span>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            Unknown - 
+                            
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white">You're out of extra usage · resets 12am (America/Sao_Paulo)</h3>
+                    
+                </div>
+                
+                <div class="expand-content border-t border-gray-700" id="expand-16">
+                    <div class="p-4 space-y-4">
+                        
+                        <!-- CLI Resume Command -->
+                        <div class="bg-green-900/30 border border-green-700 rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-sm font-semibold text-green-300">🖥️ Resume Command (Copy & Run in Terminal)</h4>
+                                <button onclick="copyCmd(16)" id="copy-btn-16" class="copy-btn px-3 py-1 bg-green-900/50 hover:bg-green-800 rounded text-xs text-green-300">
+                                    Copy
+                                </button>
+                            </div>
+                            <pre id="cmd-16" class="cli-cmd text-sm text-green-200 bg-gray-900 p-3 rounded select-all">cd ~/workspace/claude-session-manager && claude --resume 5d311b57-a10d-4b61-b516-b0e6e2a99c7f --dangerously-skip-permissions</pre>
+                        </div>
+                        
+                        <!-- Session ID -->
+                        <div class="text-xs text-gray-500">
+                            <span class="font-semibold">Full Session ID:</span> <code class="bg-gray-900 px-1 rounded">5d311b57-a10d-4b61-b516-b0e6e2a99c7f</code>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">User Prompts</h4>
+                            <div class="space-y-2 max-h-48 overflow-y-auto">
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">19:00</span>
+                                    <span class="text-gray-300 ml-2">Implement the following plan:
+
+# Bug Fix: New Session Creation Not Showing
+
+## Problem
+
+When creating a new session via the "New Session" dialog, nothing happens - no session appears in the UI.
+
+## Ro...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">19:14</span>
+                                    <span class="text-gray-300 ml-2">why there are 41 in processing and ite seems for 4 hours? visibility of what is actually happening is bad...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">19:18</span>
+                                    <span class="text-gray-300 ml-2">[&lt;65;84;34M...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">19:24</span>
+                                    <span class="text-gray-300 ml-2">/clear ...</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">Tools Used</h4>
+                            <div class="flex flex-wrap gap-2">
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Edit (6)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Read (5)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Grep (2)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Bash (1)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Task (1)</span>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="session-card bg-gray-800 rounded-lg border border-gray-700 overflow-hidden" id="session-17">
+                <div class="p-4 cursor-pointer hover:bg-gray-750" onclick="toggleSession(17)">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2 py-1 rounded text-xs font-medium bg-gray-700 text-gray-300">UNKNOWN</span>
+                            <span class="font-mono text-sm text-gray-400">e6dbbdf1</span>
+                            <span class="text-xs text-gray-500">877KB</span>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            Unknown - 
+                            
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white">You're out of extra usage · resets 12am (America/Sao_Paulo)</h3>
+                    
+                </div>
+                
+                <div class="expand-content border-t border-gray-700" id="expand-17">
+                    <div class="p-4 space-y-4">
+                        
+                        <!-- CLI Resume Command -->
+                        <div class="bg-green-900/30 border border-green-700 rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-sm font-semibold text-green-300">🖥️ Resume Command (Copy & Run in Terminal)</h4>
+                                <button onclick="copyCmd(17)" id="copy-btn-17" class="copy-btn px-3 py-1 bg-green-900/50 hover:bg-green-800 rounded text-xs text-green-300">
+                                    Copy
+                                </button>
+                            </div>
+                            <pre id="cmd-17" class="cli-cmd text-sm text-green-200 bg-gray-900 p-3 rounded select-all">cd ~/workspace/claude-session-manager && claude --resume e6dbbdf1-5ecf-4cdd-8c3e-bf4b76301bea --dangerously-skip-permissions</pre>
+                        </div>
+                        
+                        <!-- Session ID -->
+                        <div class="text-xs text-gray-500">
+                            <span class="font-semibold">Full Session ID:</span> <code class="bg-gray-900 px-1 rounded">e6dbbdf1-5ecf-4cdd-8c3e-bf4b76301bea</code>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">User Prompts</h4>
+                            <div class="space-y-2 max-h-48 overflow-y-auto">
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">19:01</span>
+                                    <span class="text-gray-300 ml-2">whats next? ...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">19:01</span>
+                                    <span class="text-gray-300 ml-2">create a plan for sprint 3...</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">Tools Used</h4>
+                            <div class="flex flex-wrap gap-2">
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Task (4)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Read (2)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Write (1)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">ExitPlanMode (1)</span>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="session-card bg-gray-800 rounded-lg border border-gray-700 overflow-hidden" id="session-18">
+                <div class="p-4 cursor-pointer hover:bg-gray-750" onclick="toggleSession(18)">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2 py-1 rounded text-xs font-medium bg-gray-700 text-gray-300">UNKNOWN</span>
+                            <span class="font-mono text-sm text-gray-400">ee6aec6f</span>
+                            <span class="text-xs text-gray-500">28KB</span>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            Unknown - 
+                            
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white">You're out of extra usage · resets 12am (America/Sao_Paulo)</h3>
+                    
+                </div>
+                
+                <div class="expand-content border-t border-gray-700" id="expand-18">
+                    <div class="p-4 space-y-4">
+                        
+                        <!-- CLI Resume Command -->
+                        <div class="bg-green-900/30 border border-green-700 rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-sm font-semibold text-green-300">🖥️ Resume Command (Copy & Run in Terminal)</h4>
+                                <button onclick="copyCmd(18)" id="copy-btn-18" class="copy-btn px-3 py-1 bg-green-900/50 hover:bg-green-800 rounded text-xs text-green-300">
+                                    Copy
+                                </button>
+                            </div>
+                            <pre id="cmd-18" class="cli-cmd text-sm text-green-200 bg-gray-900 p-3 rounded select-all">cd ~/workspace/claude-session-manager && claude --resume ee6aec6f-f64d-40df-8eef-2dc56673b3ff --dangerously-skip-permissions</pre>
+                        </div>
+                        
+                        <!-- Session ID -->
+                        <div class="text-xs text-gray-500">
+                            <span class="font-semibold">Full Session ID:</span> <code class="bg-gray-900 px-1 rounded">ee6aec6f-f64d-40df-8eef-2dc56673b3ff</code>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">User Prompts</h4>
+                            <div class="space-y-2 max-h-48 overflow-y-auto">
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">13:35</span>
+                                    <span class="text-gray-300 ml-2">pause the linter stop hook we have for claude global ...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">13:40</span>
+                                    <span class="text-gray-300 ml-2">App seems to be reloading all the tap, this is annoying review...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">14:12</span>
+                                    <span class="text-gray-300 ml-2">/clear ...</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">Tools Used</h4>
+                            <div class="flex flex-wrap gap-2">
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Read (1)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Edit (1)</span>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="session-card bg-gray-800 rounded-lg border border-gray-700 overflow-hidden" id="session-19">
+                <div class="p-4 cursor-pointer hover:bg-gray-750" onclick="toggleSession(19)">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2 py-1 rounded text-xs font-medium bg-gray-700 text-gray-300">UNKNOWN</span>
+                            <span class="font-mono text-sm text-gray-400">60de928a</span>
+                            <span class="text-xs text-gray-500">1279KB</span>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            Unknown - 
+                            
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white">You're out of extra usage · resets 12am (America/Sao_Paulo)</h3>
+                    
+                </div>
+                
+                <div class="expand-content border-t border-gray-700" id="expand-19">
+                    <div class="p-4 space-y-4">
+                        
+                        <!-- CLI Resume Command -->
+                        <div class="bg-green-900/30 border border-green-700 rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-sm font-semibold text-green-300">🖥️ Resume Command (Copy & Run in Terminal)</h4>
+                                <button onclick="copyCmd(19)" id="copy-btn-19" class="copy-btn px-3 py-1 bg-green-900/50 hover:bg-green-800 rounded text-xs text-green-300">
+                                    Copy
+                                </button>
+                            </div>
+                            <pre id="cmd-19" class="cli-cmd text-sm text-green-200 bg-gray-900 p-3 rounded select-all">cd ~/workspace/claude-session-manager && claude --resume 60de928a-9be8-4399-88e2-52e343c2bdaf --dangerously-skip-permissions</pre>
+                        </div>
+                        
+                        <!-- Session ID -->
+                        <div class="text-xs text-gray-500">
+                            <span class="font-semibold">Full Session ID:</span> <code class="bg-gray-900 px-1 rounded">60de928a-9be8-4399-88e2-52e343c2bdaf</code>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">User Prompts</h4>
+                            <div class="space-y-2 max-h-48 overflow-y-auto">
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">13:27</span>
+                                    <span class="text-gray-300 ml-2">Implement the following plan:
+
+# Sprint 2: Core Value - Embedded Session Interaction
+
+## Overview
+
+Add the ability to send prompts directly to active Claude sessions from the app, making it a true com...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">13:34</span>
+                                    <span class="text-gray-300 ml-2">whats next? ...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">14:10</span>
+                                    <span class="text-gray-300 ml-2">First er, recent projects are showing wrong on the ui its a problem I saw in the past where assistant-executive become assitant/executive review that its when creating a new session....</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">14:39</span>
+                                    <span class="text-gray-300 ml-2">I think now we have duplicatesd we have both assitaant/executive and assitant-executive as options, review ...</span>
+                                </div>
+
+                                <div class="bg-gray-900 rounded p-2 text-sm">
+                                    <span class="text-gray-500">14:44</span>
+                                    <span class="text-gray-300 ml-2">I created a new session and it didnt do anything after that.. cant see a session or anything what was supposed to happened? ...</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-300 mb-2">Tools Used</h4>
+                            <div class="flex flex-wrap gap-2">
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Read (24)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Bash (13)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Edit (12)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">TaskUpdate (10)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">TaskCreate (5)</span>
+
+                                <span class="px-2 py-1 bg-gray-700 rounded text-xs">Write (5)</span>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="mt-8 p-4 bg-gray-800 rounded-lg border border-gray-700">
+            <h2 class="text-xl font-bold text-white mb-4">Quick Stats</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <div class="p-3 bg-gray-700 rounded">
+                    <div class="text-2xl font-bold text-green-400">4</div>
+                    <div class="text-sm text-gray-400">Complete</div>
+                </div>
+                <div class="p-3 bg-gray-700 rounded">
+                    <div class="text-2xl font-bold text-yellow-400">7</div>
+                    <div class="text-sm text-gray-400">In Progress</div>
+                </div>
+                <div class="p-3 bg-gray-700 rounded">
+                    <div class="text-2xl font-bold text-red-400">2</div>
+                    <div class="text-sm text-gray-400">Bug Fixes</div>
+                </div>
+                <div class="p-3 bg-gray-700 rounded">
+                    <div class="text-2xl font-bold text-blue-400">20</div>
+                    <div class="text-sm text-gray-400">Total</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-4 p-4 bg-yellow-900/30 border border-yellow-700 rounded-lg">
+            <h3 class="text-lg font-bold text-yellow-300 mb-2">🔥 Priority Resume</h3>
+            <ol class="list-decimal list-inside space-y-2 text-gray-300 text-sm">
+                <li><strong>615742f9</strong> - Dashboard Performance (user said "fix it")</li>
+                <li><strong>03187399</strong> - Sprint 5.4: AI Insights</li>
+                <li><strong>6d6ae3e4</strong> - Fix Empty Terminal Issue</li>
+                <li><strong>fe1227d3</strong> - Tmux Integration</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function toggleSession(id) {
+            document.getElementById('expand-' + id).classList.toggle('expanded');
+        }
+        
+        function copyCmd(id) {
+            const text = document.getElementById('cmd-' + id).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.getElementById('copy-btn-' + id);
+                btn.innerText = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.innerText = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+        
+        // Auto-expand first 3
+        document.addEventListener('DOMContentLoaded', () => {
+            [0,1,2].forEach(i => {
+                const el = document.getElementById('expand-' + i);
+                if (el) el.classList.add('expanded');
+            });
+        });
+    </script>
+</body>
+</html>
