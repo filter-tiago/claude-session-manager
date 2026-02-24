@@ -56,10 +56,20 @@ interface SessionStats {
   indexed_today: number;
 }
 
+interface GetSessionsOptions {
+  limit?: number;
+  offset?: number;
+  maxAgeDays?: number;
+  includeActive?: boolean;
+  status?: string;
+  projectPath?: string;
+  showAll?: boolean;
+}
+
 // Define the API that will be exposed to the renderer process
 const electronAPI = {
   // Session operations
-  getSessions: () => ipcRenderer.invoke('get-sessions') as Promise<Session[]>,
+  getSessions: (options?: GetSessionsOptions) => ipcRenderer.invoke('get-sessions', options) as Promise<Session[]>,
   getSession: (sessionId: string) => ipcRenderer.invoke('get-session', sessionId) as Promise<Session | null>,
   getSessionEvents: (sessionId: string) => ipcRenderer.invoke('get-session-events', sessionId) as Promise<SessionEvent[]>,
   searchSessions: (query: string) => ipcRenderer.invoke('search-sessions', query) as Promise<Session[]>,

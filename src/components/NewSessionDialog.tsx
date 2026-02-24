@@ -87,19 +87,19 @@ export function NewSessionDialog({ isOpen, onClose, onSpawn }: NewSessionDialogP
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
+      {/* Backdrop with blur */}
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
 
-      {/* Dialog */}
-      <div className="relative bg-[var(--bg-secondary)] rounded-lg shadow-xl w-full max-w-lg mx-4 border border-[var(--border)]">
+      {/* Dialog - glass effect */}
+      <div className="relative glass-strong rounded-2xl shadow-2xl w-full max-w-lg mx-4 border border-[var(--border)] animate-scale-in">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border)]">
-          <h2 className="text-lg font-semibold">New Claude Session</h2>
+          <h2 className="text-lg font-semibold text-gradient">New Claude Session</h2>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-[var(--bg-tertiary)] rounded transition-colors"
+            className="p-1.5 hover:bg-[var(--bg-tertiary)] hover:glow-error rounded-lg transition-colors duration-200"
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-5 h-5 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -109,7 +109,7 @@ export function NewSessionDialog({ isOpen, onClose, onSpawn }: NewSessionDialogP
         <div className="p-6 space-y-4">
           {/* Project path input */}
           <div>
-            <label className="text-sm text-[var(--text-secondary)] mb-1 block">
+            <label className="text-sm text-[var(--text-muted)] mb-1 block">
               Project Path <span className="text-[var(--accent-primary)]">*</span>
             </label>
             <input
@@ -120,14 +120,14 @@ export function NewSessionDialog({ isOpen, onClose, onSpawn }: NewSessionDialogP
                 setError(null);
               }}
               placeholder="/Users/you/workspace/project"
-              className="w-full px-3 py-2 bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg text-sm focus:outline-none focus:border-[var(--accent-primary)] font-mono"
+              className="w-full px-3 py-2 input-glass rounded-lg text-sm font-mono placeholder:text-[var(--text-muted)]"
             />
           </div>
 
           {/* Recent projects */}
           {recentProjects.length > 0 && !projectPath && (
             <div>
-              <label className="text-sm text-[var(--text-secondary)] mb-2 block">
+              <label className="text-sm text-[var(--text-muted)] mb-2 block">
                 Recent Projects
               </label>
               <div className="space-y-1 max-h-32 overflow-y-auto">
@@ -135,10 +135,10 @@ export function NewSessionDialog({ isOpen, onClose, onSpawn }: NewSessionDialogP
                   <button
                     key={project.path}
                     onClick={() => handleSelectRecentProject(project.path)}
-                    className="w-full px-3 py-2 text-left bg-[var(--bg-primary)] hover:bg-[var(--bg-tertiary)] rounded transition-colors"
+                    className="w-full px-3 py-2 text-left glass-subtle hover:glass rounded-lg transition-colors duration-200"
                   >
                     <div className="text-sm font-medium">{project.name}</div>
-                    <div className="text-xs text-[var(--text-secondary)] truncate font-mono">
+                    <div className="text-xs text-[var(--text-muted)] truncate font-mono">
                       {project.path}
                     </div>
                   </button>
@@ -149,35 +149,35 @@ export function NewSessionDialog({ isOpen, onClose, onSpawn }: NewSessionDialogP
 
           {/* Task input */}
           <div>
-            <label className="text-sm text-[var(--text-secondary)] mb-1 block">
-              Initial Task <span className="text-xs">(optional)</span>
+            <label className="text-sm text-[var(--text-muted)] mb-1 block">
+              Initial Task <span className="text-xs opacity-60">(optional)</span>
             </label>
             <textarea
               value={task}
               onChange={(e) => setTask(e.target.value)}
               placeholder="Describe what you want to accomplish..."
               rows={2}
-              className="w-full px-3 py-2 bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg text-sm focus:outline-none focus:border-[var(--accent-primary)] resize-none"
+              className="w-full px-3 py-2 input-glass rounded-lg text-sm resize-none placeholder:text-[var(--text-muted)]"
             />
           </div>
 
           {/* Ledger input */}
           <div>
-            <label className="text-sm text-[var(--text-secondary)] mb-1 block">
-              Resume Ledger <span className="text-xs">(optional)</span>
+            <label className="text-sm text-[var(--text-muted)] mb-1 block">
+              Resume Ledger <span className="text-xs opacity-60">(optional)</span>
             </label>
             <input
               type="text"
               value={ledger}
               onChange={(e) => setLedger(e.target.value)}
               placeholder="CONTINUITY_CLAUDE-session-name"
-              className="w-full px-3 py-2 bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg text-sm focus:outline-none focus:border-[var(--accent-primary)] font-mono"
+              className="w-full px-3 py-2 input-glass rounded-lg text-sm font-mono placeholder:text-[var(--text-muted)]"
             />
           </div>
 
           {/* Error message */}
           {error && (
-            <div className="px-3 py-2 bg-[var(--error)]/10 border border-[var(--error)] rounded-lg text-sm text-[var(--error)]">
+            <div className="px-3 py-2 bg-[var(--error)]/10 border border-[var(--error)]/50 rounded-lg text-sm text-[var(--error)] glow-error animate-fade-in">
               {error}
             </div>
           )}
@@ -187,14 +187,14 @@ export function NewSessionDialog({ isOpen, onClose, onSpawn }: NewSessionDialogP
         <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-[var(--border)]">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+            className="px-4 py-2 text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:glass rounded-lg transition-colors duration-200"
           >
             Cancel
           </button>
           <button
             onClick={handleSpawn}
             disabled={isSpawning || !projectPath.trim()}
-            className="px-4 py-2 text-sm bg-[var(--accent-primary)] text-white rounded-lg font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="px-4 py-2 text-sm bg-gradient-to-r from-emerald-500 to-cyan-500 text-white rounded-lg font-medium hover:glow-accent transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
             {isSpawning ? (
               <>

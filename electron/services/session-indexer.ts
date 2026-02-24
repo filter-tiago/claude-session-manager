@@ -34,6 +34,9 @@ let watcher: ReturnType<typeof chokidar.watch> | null = null;
 type SessionUpdateCallback = (session: Session) => void;
 let onSessionUpdateCallback: SessionUpdateCallback | null = null;
 
+// Callback for new session creation
+let onSessionCreatedCallback: ((session: Session) => void) | null = null;
+
 // ============================================================
 // JSONL Event Types
 // ============================================================
@@ -284,7 +287,14 @@ export async function parseSessionFile(filePath: string): Promise<{
 // Counter for logging progress
 let indexedCount = 0;
 
-export async function indexSessionFile(filePath: string): Promise<Session | null> {
+interface IndexSessionFileOptions {
+  suppressNotifications?: boolean;
+}
+
+export async function indexSessionFile(
+  filePath: string,
+  options: IndexSessionFileOptions = {}
+): Promise<Session | null> {
   try {
     // Only log every 100 files to reduce output
     indexedCount++;
@@ -292,18 +302,31 @@ export async function indexSessionFile(filePath: string): Promise<Session | null
       console.log(`[Indexer] Indexed ${indexedCount} files...`);
     }
 
-    const { session, events, searchContent, toolNames, filesTouched } = await parseSessionFile(filePath);
+    // Check file size BEFORE parsing to skip unchanged files
+    const sessionId = path.basename(filePath, '.jsonl');
+    let fileSize = 0;
+    try {
+      const stats = fs.statSync(filePath);
+      fileSize = stats.size;
+    } catch {
+      // File might have been deleted
+      return null;
+    }
 
-    // Check if we need to reindex (file changed since last index)
-    const existing = getSession(session.session_id);
-    if (existing && existing.file_size_bytes === session.file_size_bytes) {
-      // File hasn't changed, skip reindex but update status
+    const existing = getSession(sessionId);
+    const isNewSession = !existing;
+
+    if (existing && existing.file_size_bytes === fileSize) {
+      // File hasn't changed, skip parsing but update status if needed
       const newStatus = determineStatus(existing.last_activity);
       if (newStatus !== existing.status) {
         upsertSession({ ...existing, status: newStatus });
       }
       return existing;
     }
+
+    // File is new or changed - parse it
+    const { session, events, searchContent, toolNames, filesTouched } = await parseSessionFile(filePath);
 
     // Delete old events before reindexing
     deleteSessionEvents(session.session_id);
@@ -329,9 +352,15 @@ export async function indexSessionFile(filePath: string): Promise<Session | null
     // Get the full session with indexed_at
     const indexed = getSession(session.session_id);
 
-    // Notify listeners
-    if (indexed && onSessionUpdateCallback) {
-      onSessionUpdateCallback(indexed);
+    // Notify listeners - use appropriate callback based on new vs update.
+    // During startup bulk indexing, notifications are suppressed to avoid
+    // flooding the renderer with historical sessions.
+    if (indexed && !options.suppressNotifications) {
+      if (isNewSession && onSessionCreatedCallback) {
+        onSessionCreatedCallback(indexed);
+      } else if (onSessionUpdateCallback) {
+        onSessionUpdateCallback(indexed);
+      }
     }
 
     console.log(`[Indexer] Indexed: ${session.slug} (${session.message_count} messages, ${session.tool_call_count} tool calls)`);
@@ -357,6 +386,9 @@ export async function indexAllSessions(): Promise<number> {
     return count;
   }
 
+  // Collect all JSONL files with their modification times
+  const filesToIndex: Array<{ filePath: string; mtimeMs: number }> = [];
+
   const projectDirs = fs.readdirSync(CLAUDE_PROJECTS_DIR);
 
   for (const projectDir of projectDirs) {
@@ -371,11 +403,24 @@ export async function indexAllSessions(): Promise<number> {
       if (!file.endsWith('.jsonl')) continue;
 
       const filePath = path.join(projectPath, file);
-      const session = await indexSessionFile(filePath);
-
-      if (session) {
-        count++;
+      try {
+        const fileStat = fs.statSync(filePath);
+        filesToIndex.push({ filePath, mtimeMs: fileStat.mtimeMs });
+      } catch {
+        // File may have been deleted between readdir and stat
       }
+    }
+  }
+
+  // Sort by modification time, newest first
+  filesToIndex.sort((a, b) => b.mtimeMs - a.mtimeMs);
+
+  // Process files in order (newest first)
+  for (const { filePath } of filesToIndex) {
+    const session = await indexSessionFile(filePath, { suppressNotifications: true });
+
+    if (session) {
+      count++;
     }
   }
 
@@ -446,17 +491,64 @@ export function setSessionUpdateCallback(callback: SessionUpdateCallback | null)
   onSessionUpdateCallback = callback;
 }
 
+/**
+ * Set the callback for new session creation
+ */
+export function setSessionCreatedCallback(callback: ((session: Session) => void) | null): void {
+  onSessionCreatedCallback = callback;
+}
+
 // ============================================================
 // Helper Functions
 // ============================================================
 
 /**
  * Decode project directory name to path
- * e.g., "-Users-alice-workspace-project" -> "/Users/alice/workspace/project"
+ * e.g., "-Users-partiu-workspace-project" -> "/Users/partiu/workspace/project"
+ *
+ * The encoding is ambiguous: dashes represent path separators, but project names
+ * can also contain dashes. We resolve this by validating against the filesystem.
  */
 function decodeProjectPath(dirName: string): string {
-  // Replace leading dash with slash, then all dashes with slashes
-  return dirName.replace(/^-/, '/').replace(/-/g, '/');
+  // Remove leading dash and split by dash
+  const parts = dirName.replace(/^-/, '').split('-');
+
+  // Build the path iteratively, checking what exists on the filesystem
+  let currentPath = '';
+  let i = 0;
+
+  while (i < parts.length) {
+    const nextPart = parts[i];
+    const candidatePath = currentPath + '/' + nextPart;
+
+    // Check if this path segment exists
+    if (fs.existsSync(candidatePath)) {
+      currentPath = candidatePath;
+      i++;
+    } else {
+      // Try combining with next parts (project name with dashes)
+      let found = false;
+      for (let j = i + 1; j <= parts.length; j++) {
+        const combinedPart = parts.slice(i, j).join('-');
+        const combinedPath = currentPath + '/' + combinedPart;
+
+        if (fs.existsSync(combinedPath)) {
+          currentPath = combinedPath;
+          i = j;
+          found = true;
+          break;
+        }
+      }
+
+      // If nothing exists, just use single part and continue
+      if (!found) {
+        currentPath = candidatePath;
+        i++;
+      }
+    }
+  }
+
+  return currentPath || dirName.replace(/^-/, '/').replace(/-/g, '/');
 }
 
 /**

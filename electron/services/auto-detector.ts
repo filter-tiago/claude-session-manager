@@ -10,7 +10,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { getSessions, updateSessionAnnotations } from './database';
+import { getSessions, updateSessionDetectedFields } from './database';
 import type { Session, SessionEvent } from '../../src/types/electron';
 
 // ============================================================
@@ -164,48 +164,65 @@ export function detectActivityFromEvents(events: SessionEvent[]): ActivityType {
 // Area Detection
 // ============================================================
 
+// Directories to always skip when detecting areas
+const SKIP_DIRS = new Set([
+  'node_modules', 'dist', 'build', '__pycache__', '.git', '.next',
+  'coverage', 'out', '.turbo', '.cache', 'target', 'vendor',
+  'bower_components', '.venv', 'env', 'venv', '__tests__', 'tests',
+  'test', 'spec', 'docs', 'doc', 'public', 'static', 'assets',
+]);
+
+// Priority-weighted patterns for area detection
+const AREA_PATTERNS: Array<{ pattern: RegExp; weight: number }> = [
+  // Priority 1: Explicit area markers (highest weight)
+  { pattern: /areas\/([^/]+)/, weight: 10 },
+  { pattern: /domains\/([^/]+)/, weight: 10 },
+  { pattern: /modules\/([^/]+)/, weight: 10 },
+  { pattern: /features\/([^/]+)/, weight: 10 },
+
+  // Priority 2: Monorepo patterns (high weight)
+  { pattern: /packages\/([^/]+)/, weight: 8 },
+  { pattern: /apps\/([^/]+)/, weight: 8 },
+  { pattern: /services\/([^/]+)/, weight: 8 },
+  { pattern: /libs\/([^/]+)/, weight: 8 },
+  { pattern: /internal\/([^/]+)/, weight: 8 },
+
+  // Priority 3: Generic patterns (lower weight)
+  { pattern: /src\/([^/]+)/, weight: 3 },
+  { pattern: /app\/([^/]+)/, weight: 3 },
+  { pattern: /lib\/([^/]+)/, weight: 3 },
+  { pattern: /components\/([^/]+)/, weight: 3 },
+
+  // Priority 4: Workspace root (lowest weight)
+  { pattern: /workspace\/[^/]+\/([^/]+)/, weight: 1 },
+];
+
 /**
- * Detect area/domain from file paths
+ * Detect area/domain from file paths with prioritized heuristics
  */
 export function detectArea(filesTouched: Set<string>): string | undefined {
-  const pathCounts: Record<string, number> = {};
+  const areaScores: Record<string, number> = {};
 
   for (const filePath of filesTouched) {
-    // Extract area from path like /Users/.../areas/engineering/...
-    const areaMatch = filePath.match(/areas\/([^/]+)/);
-    if (areaMatch) {
-      const area = areaMatch[1];
-      pathCounts[area] = (pathCounts[area] || 0) + 1;
-    }
-
-    // Check for common project patterns
-    const patterns = [
-      /workspace\/[^/]+\/([^/]+)/,
-      /src\/([^/]+)/,
-      /app\/([^/]+)/,
-      /packages\/([^/]+)/,
-      /services\/([^/]+)/,
-    ];
-
-    for (const pattern of patterns) {
+    for (const { pattern, weight } of AREA_PATTERNS) {
       const match = filePath.match(pattern);
       if (match) {
         const area = match[1];
         // Skip common non-area directories
-        if (!['node_modules', 'dist', 'build', '__pycache__', '.git'].includes(area)) {
-          pathCounts[area] = (pathCounts[area] || 0) + 1;
+        if (!SKIP_DIRS.has(area.toLowerCase())) {
+          areaScores[area] = (areaScores[area] || 0) + weight;
         }
       }
     }
   }
 
-  // Return most common area
-  let maxCount = 0;
+  // Return highest-scoring area
+  let maxScore = 0;
   let maxArea: string | undefined;
 
-  for (const [area, count] of Object.entries(pathCounts)) {
-    if (count > maxCount) {
-      maxCount = count;
+  for (const [area, score] of Object.entries(areaScores)) {
+    if (score > maxScore) {
+      maxScore = score;
       maxArea = area;
     }
   }
@@ -381,7 +398,7 @@ export async function runAutoDetection(): Promise<number> {
     if (!session.detected_area) {
       const area = detectAreaFromProjectPath(session.project_path);
       if (area) {
-        updateSessionAnnotations(session.session_id, undefined, undefined, undefined);
+        updateSessionDetectedFields(session.session_id, area, undefined, undefined);
         enhanced++;
       }
     }
