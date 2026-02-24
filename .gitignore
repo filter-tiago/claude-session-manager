@@ -37,5 +37,8 @@ release/
 *.sw?
 
 # Internal development tooling
-.claude/
-thoughts/
+.claude/tsc-cache/
+.dmux-hooks/
+.dmux/
+session-recovery.html
+life-on-claude-nine*
