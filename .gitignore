@@ -35,3 +35,7 @@ release/
 *.njsproj
 *.sln
 *.sw?
+
+# Internal development tooling
+.claude/
+thoughts/

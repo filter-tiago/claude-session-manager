@@ -452,7 +452,7 @@ export function setSessionUpdateCallback(callback: SessionUpdateCallback | null)
 
 /**
  * Decode project directory name to path
- * e.g., "-Users-partiu-workspace-project" -> "/Users/partiu/workspace/project"
+ * e.g., "-Users-alice-workspace-project" -> "/Users/alice/workspace/project"
  */
 function decodeProjectPath(dirName: string): string {
   // Replace leading dash with slash, then all dashes with slashes

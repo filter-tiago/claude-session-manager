@@ -26,11 +26,8 @@ export function useSessions() {
   // Load all sessions
   const loadSessions = useCallback(async () => {
     setLoading(true);
-    console.log('[useSessions] Loading sessions...');
-    console.log('[useSessions] electronAPI available:', !!window.electronAPI);
     try {
       const data = await window.electronAPI?.getSessions();
-      console.log('[useSessions] Got sessions:', data?.length ?? 0);
       if (data) {
         setSessions(data);
       }
