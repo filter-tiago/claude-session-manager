@@ -2,15 +2,6 @@
 
 Electron desktop app for managing multiple Claude CLI sessions across tmux.
 
-## Current State: v3 Development
-
-v1 is complete. Now building v3 with IDE-like experience.
-
-**Start here:**
-```bash
-cat thoughts/ledgers/CONTINUITY_CLAUDE-command-center-v3.md
-```
-
 ## Quick Commands
 
 ```bash
@@ -49,13 +40,4 @@ src/
   components/       # UI components
   hooks/            # React hooks
   stores/           # Zustand stores
-thoughts/
-  ledgers/          # Continuity ledgers
-  shared/plans/     # Implementation plans
 ```
-
-## v3 Resources
-
-- **Ledger**: `thoughts/ledgers/CONTINUITY_CLAUDE-command-center-v3.md`
-- **Plan**: `thoughts/shared/plans/command-center-v3.md`
-- **Mockup**: `thoughts/shared/plans/claude-command-center-v3-embedded.html`

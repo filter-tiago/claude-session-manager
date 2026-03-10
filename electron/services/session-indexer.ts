@@ -504,7 +504,7 @@ export function setSessionCreatedCallback(callback: ((session: Session) => void)
 
 /**
  * Decode project directory name to path
- * e.g., "-Users-partiu-workspace-project" -> "/Users/partiu/workspace/project"
+ * e.g., "-Users-alice-workspace-project" -> "/Users/alice/workspace/project"
  *
  * The encoding is ambiguous: dashes represent path separators, but project names
  * can also contain dashes. We resolve this by validating against the filesystem.
@@ -698,7 +698,7 @@ function detectArea(filesTouched: Set<string>): string | undefined {
   const pathCounts: Record<string, number> = {};
 
   for (const filePath of filesTouched) {
-    // Extract area from path like /Users/.../areas/engineering/...
+    // Extract area from path like .../areas/engineering/...
     const areaMatch = filePath.match(/areas\/([^/]+)/);
     if (areaMatch) {
       const area = areaMatch[1];
