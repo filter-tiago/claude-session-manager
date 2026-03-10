@@ -1,3 +1,7 @@
+// Suppress EPIPE errors from console.log when stdout/stderr pipe closes during shutdown
+process.stdout?.on('error', (err) => { if ((err as NodeJS.ErrnoException).code !== 'EPIPE') throw err; });
+process.stderr?.on('error', (err) => { if ((err as NodeJS.ErrnoException).code !== 'EPIPE') throw err; });
+
 import { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, Notification } from 'electron';
 import path from 'path';
 import fs from 'fs';
